@@ -14,21 +14,28 @@ public class ApplicationStartup implements CommandLineRunner {
     private final CatalogController catalogController;
     private final String title;
     private final Long limit;
+    private final String author;
 
     public ApplicationStartup(
             CatalogController catalogController,
             @Value("${book.catalog.query}") String title,
-            @Value("${book.catalog.limit}") Long limit
+            @Value("${book.catalog.limit}") Long limit,
+            @Value("${book.catalog.author}") String author
     ) {
         this.catalogController = catalogController;
         this.title = title;
         this.limit = limit;
+        this.author = author;
     }
 
 
     @Override
     public void run(String... args) {
         List<Book> books = catalogController.findByTitle(title);
+        System.out.println("Find By Title");
         books.stream().limit(limit).forEach(System.out::println);
+        System.out.println("Find By Author");
+        List<Book> booksByAuthor = catalogController.findByAuthor(author);
+        booksByAuthor.stream().limit(limit).forEach(System.out::println);
     }
 }
