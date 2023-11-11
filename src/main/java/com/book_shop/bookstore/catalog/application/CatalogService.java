@@ -32,13 +32,16 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public List<Book> findAll() {
-        return Collections.emptyList();
+    public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
+        return catalogRepository.findAll().stream()
+                .filter(book -> book.getTitle().startsWith(title))
+                .filter(book -> book.getAuthor().startsWith(author))
+                .findFirst();
     }
 
     @Override
-    public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
-        return Optional.empty();
+    public List<Book> findAll() {
+        return catalogRepository.findAll();
     }
 
     @Override
@@ -53,9 +56,15 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public void updateBook() {
-
+    public UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand) {
+        return catalogRepository.findById(updateBookCommand.getId())
+                .map(book -> {
+                    book.setTitle(updateBookCommand.getTitle());
+                    book.setAuthor(updateBookCommand.getAuthor());
+                    book.setYear(updateBookCommand.getYear());
+                    catalogRepository.save(book);
+                    return UpdateBookResponse.SUCCESS;
+                })
+                .orElseGet(() -> new UpdateBookResponse(false, Collections.singletonList("Book not found with id: " + updateBookCommand.getId())));
     }
-
-
 }

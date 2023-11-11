@@ -33,7 +33,23 @@ public class ApplicationStartup implements CommandLineRunner {
     @Override
     public void run(String... args) {
         initData();
-        findByTitleAndAuthor();
+        findByTitle();
+        findAndUpdate();
+        findByTitle();
+    }
+
+    private void findAndUpdate() {
+        System.out.println("Updating book.....");
+        catalogUseCase.findOneByTitleAndAuthor("Harry Potter", "Adam")
+                .ifPresent(book -> {
+                     CatalogUseCase.UpdateBookCommand command = new CatalogUseCase.UpdateBookCommand(
+                            book.getId(),
+                            "Harry Tadeusz czyli ostatni zjazd na Litwie",
+                            book.getAuthor(),
+                            book.getYear()
+                    );
+                    catalogUseCase.updateBook(command);
+                });
     }
 
     public void initData() {
@@ -42,12 +58,10 @@ public class ApplicationStartup implements CommandLineRunner {
         catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Wiedźmin", "Władysław Reymont", 1834));
     }
 
-    private void findByTitleAndAuthor() {
+    private void findByTitle() {
         List<Book> books = catalogUseCase.findByTitle(title);
         System.out.println("Find By Title");
         books.stream().limit(limit).forEach(System.out::println);
-        System.out.println("Find By Author");
-        List<Book> booksByAuthor = catalogUseCase.findByAuthor(author);
-        booksByAuthor.stream().limit(limit).forEach(System.out::println);
+
     }
 }

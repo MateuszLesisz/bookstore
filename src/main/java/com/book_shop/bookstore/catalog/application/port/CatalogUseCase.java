@@ -3,8 +3,11 @@ package com.book_shop.bookstore.catalog.application.port;
 import com.book_shop.bookstore.catalog.domain.Book;
 import lombok.Value;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
     List<Book> findByTitle(String title);
@@ -19,12 +22,28 @@ public interface CatalogUseCase {
 
     void removeById(Long id);
 
-    void updateBook();
+    UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand);
 
     @Value
     class CreateBookCommand {
         String title;
         String author;
         Integer year;
+    }
+
+    @Value
+    class UpdateBookCommand {
+        Long id;
+        String title;
+        String author;
+        Integer year;
+    }
+
+    @Value
+    class UpdateBookResponse {
+        public static final UpdateBookResponse SUCCESS = new UpdateBookResponse(true, emptyList());
+
+        boolean success;
+        List<String> errors;
     }
 }
