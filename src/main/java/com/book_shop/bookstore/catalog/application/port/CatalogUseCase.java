@@ -1,6 +1,7 @@
 package com.book_shop.bookstore.catalog.application.port;
 
 import com.book_shop.bookstore.catalog.domain.Book;
+import lombok.Value;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,16 @@ public interface CatalogUseCase {
 
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
 
-    void addBook();
+    void addBook(CreateBookCommand createBookCommand);
 
     void removeById(Long id);
 
     void updateBook();
+
+    @Value
+    class CreateBookCommand {
+        String title;
+        String author;
+        Integer year;
+    }
 }
