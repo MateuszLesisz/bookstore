@@ -42,13 +42,12 @@ public class ApplicationStartup implements CommandLineRunner {
         System.out.println("Updating book.....");
         catalogUseCase.findOneByTitleAndAuthor("Harry Potter", "Adam")
                 .ifPresent(book -> {
-                     CatalogUseCase.UpdateBookCommand command = new CatalogUseCase.UpdateBookCommand(
-                            book.getId(),
-                            "Harry Tadeusz czyli ostatni zjazd na Litwie",
-                            book.getAuthor(),
-                            book.getYear()
-                    );
-                    catalogUseCase.updateBook(command);
+                    CatalogUseCase.UpdateBookCommand command = CatalogUseCase.UpdateBookCommand.builder()
+                            .id(book.getId())
+                            .title("Harry Tadeusz czyli ostatni zjazd na Litwie")
+                            .build();
+                    CatalogUseCase.UpdateBookResponse response = catalogUseCase.updateBook(command);
+                    System.out.println("Updating book result: " + response.isSuccess());
                 });
     }
 

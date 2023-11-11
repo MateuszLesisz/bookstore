@@ -52,6 +52,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void removeById(Long id) {
+        catalogRepository.removeById(id);
 
     }
 
@@ -59,10 +60,8 @@ class CatalogService implements CatalogUseCase {
     public UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand) {
         return catalogRepository.findById(updateBookCommand.getId())
                 .map(book -> {
-                    book.setTitle(updateBookCommand.getTitle());
-                    book.setAuthor(updateBookCommand.getAuthor());
-                    book.setYear(updateBookCommand.getYear());
-                    catalogRepository.save(book);
+                    Book updatedBook = updateBookCommand.updateFields(book);
+                    catalogRepository.save(updatedBook);
                     return UpdateBookResponse.SUCCESS;
                 })
                 .orElseGet(() -> new UpdateBookResponse(false, Collections.singletonList("Book not found with id: " + updateBookCommand.getId())));
