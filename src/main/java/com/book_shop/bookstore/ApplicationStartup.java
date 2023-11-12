@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -33,6 +34,15 @@ public class ApplicationStartup implements CommandLineRunner {
     @Override
     public void run(String... args) {
         initData();
+        searchCatalog();
+        placeOrder();
+    }
+
+    private void placeOrder() {
+
+    }
+
+    private void searchCatalog() {
         findByTitle();
         findAndUpdate();
         findByTitle();
@@ -52,9 +62,9 @@ public class ApplicationStartup implements CommandLineRunner {
     }
 
     public void initData() {
-        catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Harry Potter", "Adam Mickiewicz", 1834));
-        catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Hobbit", "Henryk Sienkiewicz", 1834));
-        catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Wiedźmin", "Władysław Reymont", 1834));
+        catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Harry Potter", "Adam Mickiewicz", 1834, new BigDecimal("12.99")));
+        catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Hobbit", "Henryk Sienkiewicz", 1834, new BigDecimal("12.99")));
+        catalogUseCase.addBook(new CatalogUseCase.CreateBookCommand("Wiedźmin", "Władysław Reymont", 1834, new BigDecimal("12.99")));
     }
 
     private void findByTitle() {
