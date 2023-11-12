@@ -12,17 +12,12 @@ import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
     List<Book> findByTitle(String title);
-
     Optional<Book> findOneByTitle(String title);
-
     List<Book> findByAuthor(String author);
-
     List<Book> findAll();
-
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
-
+    List<Book> findByTitleAndAuthor(String title, String author);
     void addBook(CreateBookCommand createBookCommand);
-
     void removeById(Long id);
 
     UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand);
