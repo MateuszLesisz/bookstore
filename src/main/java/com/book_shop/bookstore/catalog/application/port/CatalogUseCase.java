@@ -27,6 +27,8 @@ public interface CatalogUseCase {
 
     UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand);
 
+    Optional<Book> findById(Long id);
+
     @Value
     class CreateBookCommand {
         String title;
