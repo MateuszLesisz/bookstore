@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface CatalogRepository {
     List<Book> findAll();
+    Optional<Book> findOneByTitle(String title);
 
     void save(Book book);
 

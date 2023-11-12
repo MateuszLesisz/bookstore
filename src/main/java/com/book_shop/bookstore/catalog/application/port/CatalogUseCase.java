@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +12,8 @@ import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
     List<Book> findByTitle(String title);
+
+    Optional<Book> findOneByTitle(String title);
 
     List<Book> findByAuthor(String author);
 

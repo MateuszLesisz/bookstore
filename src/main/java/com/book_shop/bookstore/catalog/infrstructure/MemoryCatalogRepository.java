@@ -22,6 +22,12 @@ class MemoryCatalogRepository implements CatalogRepository {
     }
 
     @Override
+    public Optional<Book> findOneByTitle(String title) {
+        return Optional.empty();
+    }
+
+
+    @Override
     public void save(Book book) {
         if (book.getId() != null) {
             storage.put(book.getId(), book);
