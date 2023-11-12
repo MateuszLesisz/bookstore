@@ -17,24 +17,28 @@ public interface CatalogUseCase {
     List<Book> findAll();
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
     List<Book> findByTitleAndAuthor(String title, String author);
-    void addBook(CreateBookCommand createBookCommand);
+    Book addBook(CreateBookCommand createBookCommand);
     void removeById(Long id);
-
     UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand);
-
     Optional<Book> findById(Long id);
 
     @Value
     class CreateBookCommand {
+
         String title;
         String author;
         Integer year;
         BigDecimal price;
+
+        public Book toBook() {
+            return new Book(title, author, year, price);
+        }
     }
 
     @Value
     @Builder
     class UpdateBookCommand {
+
         Long id;
         String title;
         String author;
