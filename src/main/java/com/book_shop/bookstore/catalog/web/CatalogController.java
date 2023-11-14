@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,12 +66,11 @@ public class CatalogController {
         catalog.removeById(id);
     }
 
-
     @Data
     private static class RestCreateBookCommand {
-        @NotBlank
+        @NotBlank(message = "Please provide a title.")
         private String title;
-        @NotBlank
+        @NotBlank(message = "Please provide an author.")
         private String author;
         @NotNull
         private Integer year;
