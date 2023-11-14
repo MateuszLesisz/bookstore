@@ -22,6 +22,7 @@ public interface CatalogUseCase {
     void removeById(Long id);
     UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand);
     Optional<Book> findById(Long id);
+    void updateBookCover(UpdateBookCoverCommand command);
 
     @Value
     class CreateBookCommand {
@@ -70,5 +71,13 @@ public interface CatalogUseCase {
 
         boolean success;
         List<String> errors;
+    }
+
+    @Value
+    class UpdateBookCoverCommand {
+        Long id;
+        byte[] file;
+        String contentType;
+        String fileName;
     }
 }
