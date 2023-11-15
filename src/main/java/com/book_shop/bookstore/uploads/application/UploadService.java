@@ -26,4 +26,9 @@ public class UploadService implements UploadUseCase {
     public Optional<Upload> getBtId(String id) {
         return Optional.ofNullable(storage.get(id));
     }
+
+    @Override
+    public void removeById(String id) {
+        storage.remove(id);
+    }
 }

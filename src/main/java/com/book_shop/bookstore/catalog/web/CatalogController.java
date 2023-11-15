@@ -87,6 +87,12 @@ public class CatalogController {
         catalog.updateBookCover(new UpdateBookCoverCommand(id, file.getBytes(), file.getContentType(), file.getOriginalFilename()));
     }
 
+    @DeleteMapping("/{id}/cover")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeBookCover(@PathVariable Long id) {
+        catalog.removeBookCover(id);
+    }
+
 
     @Data
     private static class RestBookCommand {

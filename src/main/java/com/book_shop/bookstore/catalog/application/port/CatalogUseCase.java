@@ -23,6 +23,7 @@ public interface CatalogUseCase {
     UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand);
     Optional<Book> findById(Long id);
     void updateBookCover(UpdateBookCoverCommand command);
+    void removeBookCover(Long id);
 
     @Value
     class CreateBookCommand {
