@@ -25,6 +25,7 @@ public class MemoryOrderRepository implements OrderRepository {
             long nextId = nextId();
             order.setId(nextId);
             order.setCreatedAt(LocalDateTime.now());
+            storage.put(order.getId(), order);
         }
         return order;
     }

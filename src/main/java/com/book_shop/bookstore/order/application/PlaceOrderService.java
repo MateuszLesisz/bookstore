@@ -6,6 +6,8 @@ import com.book_shop.bookstore.order.domain.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class PlaceOrderService implements PlaceOrderUseCase {
@@ -20,5 +22,10 @@ public class PlaceOrderService implements PlaceOrderUseCase {
                 .build();
         Order save = orderRepository.save(order);
         return PlaceOrderResponse.success(save.getId());
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return orderRepository.findAll();
     }
 }

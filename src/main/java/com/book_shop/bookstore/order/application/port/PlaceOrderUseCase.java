@@ -18,6 +18,7 @@ import static java.util.Collections.emptyList;
 public interface PlaceOrderUseCase {
 
     PlaceOrderResponse placeOrder(PlaceOrderCommand placeOrderCommand);
+    List<Order> findAll();
 
     @Builder
     @Value
