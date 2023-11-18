@@ -4,6 +4,7 @@ import com.book_shop.bookstore.order.application.port.PlaceOrderUseCase;
 import com.book_shop.bookstore.order.domain.Order;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,5 +21,13 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<Order> findAllOrders() {
         return placeOrderUseCase.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        return placeOrderUseCase
+                .findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

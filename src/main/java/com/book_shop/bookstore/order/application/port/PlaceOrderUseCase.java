@@ -12,6 +12,7 @@ import lombok.Value;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 
@@ -19,6 +20,7 @@ public interface PlaceOrderUseCase {
 
     PlaceOrderResponse placeOrder(PlaceOrderCommand placeOrderCommand);
     List<Order> findAll();
+    Optional<Order> findById(Long id);
 
     @Builder
     @Value
