@@ -56,11 +56,11 @@ public class CatalogController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> addBook(@Valid @RequestBody CatalogController.RestBookCommand command) {
-        return ResponseEntity.created(createdBookUri(catalog.addBook(command.toCreateCommand()))).build();
+    public ResponseEntity<Void> addBook(@Valid @RequestBody RestBookCommand command) {
+        return ResponseEntity.created(createBookUri(catalog.addBook(command.toCreateCommand()))).build();
     }
 
-    private static URI createdBookUri(Book book) {
+    private static URI createBookUri(Book book) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + book.getId().toString()).build().toUri();
     }
 

@@ -12,15 +12,14 @@ import lombok.Value;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 
 public interface PlaceOrderUseCase {
 
     PlaceOrderResponse placeOrder(PlaceOrderCommand placeOrderCommand);
-    List<Order> findAll();
-    Optional<Order> findById(Long id);
+
+    Order addOrder(OrderCommand createOrderCommand);
 
     @Builder
     @Value
@@ -37,7 +36,7 @@ public interface PlaceOrderUseCase {
         Recipient recipient;
         LocalDateTime createdAt;
 
-        Order toOrder() {
+        public Order toOrder() {
             return Order.builder()
                     .status(status)
                     .items(items)
