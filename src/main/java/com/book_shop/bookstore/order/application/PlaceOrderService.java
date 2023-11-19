@@ -6,6 +6,8 @@ import com.book_shop.bookstore.order.domain.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 
 @Service
 @AllArgsConstructor
@@ -26,5 +28,16 @@ public class PlaceOrderService implements PlaceOrderUseCase {
     @Override
     public Order addOrder(OrderCommand orderCommand) {
         return orderRepository.save(orderCommand.toOrder());
+    }
+
+    @Override
+    public UpdateOrderResponse updateOrder(UpdateOrderCommand updateOrder) {
+        return orderRepository.findById(updateOrder.getId())
+                .map(order -> {
+                    Order updatedOrder = updateOrder.updateFields(order);
+                    orderRepository.save(updatedOrder);
+                    return UpdateOrderResponse.SUCCESS;
+                })
+                .orElseGet(() -> new UpdateOrderResponse(false, Collections.singletonList("Order not found with id: " + updateOrder.getId())));
     }
 }

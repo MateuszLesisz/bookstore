@@ -14,6 +14,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -55,6 +56,17 @@ public class OrderController {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + order.getId().toString()).build().toUri();
     }
 
+    @PutMapping("/{id}/status")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateOrder(@PathVariable Long id,
+                            @RequestBody RestOrderCommand command) {
+        UpdateOrderResponse response = placeOrderUseCase.updateOrder(command.toUpdateOrderCommand(id));
+        if (!response.isSuccess()) {
+            String message = String.join(", ", response.getErrors());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
     @Data
     private static class RestOrderCommand {
         private OrderStatus status = OrderStatus.NEW;
@@ -67,6 +79,10 @@ public class OrderController {
 
         OrderCommand toOrderCommand() {
             return new OrderCommand(status, items, recipient, createdAt);
+        }
+
+        UpdateOrderCommand toUpdateOrderCommand(Long id) {
+            return new UpdateOrderCommand(id, items, recipient, createdAt);
         }
     }
 }

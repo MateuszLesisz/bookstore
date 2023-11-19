@@ -5,6 +5,7 @@ import com.book_shop.bookstore.order.domain.Order;
 import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
@@ -20,6 +21,7 @@ public interface PlaceOrderUseCase {
     PlaceOrderResponse placeOrder(PlaceOrderCommand placeOrderCommand);
 
     Order addOrder(OrderCommand createOrderCommand);
+    UpdateOrderResponse updateOrder(UpdateOrderCommand updateOrderCommand);
 
     @Builder
     @Value
@@ -94,5 +96,36 @@ public interface PlaceOrderUseCase {
         public static PlaceOrderResponse failure(String... errors) {
             return new PlaceOrderResponse(false, null, Arrays.asList(errors));
         }
+    }
+
+    @Value
+    @AllArgsConstructor
+    class UpdateOrderCommand {
+
+        Long id;
+        List<OrderItem> items;
+        Recipient recipient;
+        LocalDateTime createdAt;
+
+        public Order updateFields(Order order) {
+            if (items != null) {
+                order.setItems(items);
+            }
+            if (recipient != null) {
+                order.setRecipient(recipient);
+            }
+            if (createdAt != null) {
+                order.setCreatedAt(LocalDateTime.now());
+            }
+            return order;
+        }
+    }
+
+    @Value
+    class UpdateOrderResponse {
+        public static final UpdateOrderResponse SUCCESS = new UpdateOrderResponse(true, emptyList());
+
+        boolean success;
+        List<String> errors;
     }
 }
