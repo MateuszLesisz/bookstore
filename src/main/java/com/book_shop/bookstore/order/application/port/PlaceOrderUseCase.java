@@ -22,6 +22,7 @@ public interface PlaceOrderUseCase {
 
     Order addOrder(OrderCommand createOrderCommand);
     UpdateOrderResponse updateOrder(UpdateOrderCommand updateOrderCommand);
+    void removeOrder(Long id);
 
     @Builder
     @Value

@@ -40,4 +40,9 @@ public class PlaceOrderService implements PlaceOrderUseCase {
                 })
                 .orElseGet(() -> new UpdateOrderResponse(false, Collections.singletonList("Order not found with id: " + updateOrder.getId())));
     }
+
+    @Override
+    public void removeOrder(Long id) {
+        orderRepository.removeById(id);
+    }
 }

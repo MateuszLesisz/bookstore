@@ -67,6 +67,12 @@ public class OrderController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeOrder(@PathVariable Long id) {
+        placeOrderUseCase.removeOrder(id);
+    }
+
     @Data
     private static class RestOrderCommand {
         private OrderStatus status = OrderStatus.NEW;
