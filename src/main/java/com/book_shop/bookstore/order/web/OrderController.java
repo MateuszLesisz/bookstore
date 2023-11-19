@@ -48,8 +48,7 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> addOrder(@Valid @RequestBody RestOrderCommand command) {
-        ResponseEntity<Void> rs = ResponseEntity.created(createOrderUri(placeOrderUseCase.addOrder(command.toOrderCommand()))).build();
-        return rs;
+        return ResponseEntity.created(createOrderUri(placeOrderUseCase.addOrder(command.toOrderCommand()))).build();
     }
 
     private static URI createOrderUri(Order order) {
