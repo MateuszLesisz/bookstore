@@ -7,6 +7,8 @@ import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -56,10 +58,12 @@ public class OrderController {
 
     @Data
     private static class RestOrderCommand {
-
         private OrderStatus status = OrderStatus.NEW;
+        @NotEmpty
         private List<OrderItem> items;
+        @NotNull
         private Recipient recipient;
+        @NotNull
         private LocalDateTime createdAt;
 
         OrderCommand toOrderCommand() {
