@@ -1,5 +1,7 @@
 package com.book_shop.bookstore.catalog.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -9,8 +11,10 @@ import java.math.BigDecimal;
 @ToString
 @Getter
 @Setter
+@Entity
 public class Book {
 
+    @Id
     private Long id;
     private String title;
     private String author;
