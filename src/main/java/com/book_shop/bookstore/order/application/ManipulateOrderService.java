@@ -3,6 +3,7 @@ package com.book_shop.bookstore.order.application;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.db.OrderJpaRepository;
 import com.book_shop.bookstore.order.domain.Order;
+import com.book_shop.bookstore.order.domain.OrderStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +17,26 @@ public class ManipulateOrderService implements ManipulateOrderUseCase {
     private final OrderJpaRepository orderRepository;
 
     @Override
-    public Order addOrder(OrderCommand orderCommand) {
-        return orderRepository.save(orderCommand.toOrder());
-    }
-
-    @Override
-    public UpdateOrderResponse updateOrder(UpdateOrderCommand updateOrder) {
-        return orderRepository.findById(updateOrder.getId())
-                .map(order -> {
-                    Order updatedOrder = updateOrder.updateFields(order);
-                    orderRepository.save(updatedOrder);
-                    return UpdateOrderResponse.SUCCESS;
-                })
-                .orElseGet(() -> new UpdateOrderResponse(false, Collections.singletonList("Order not found with id: " + updateOrder.getId())));
+    public PlaceOrderResponse placeOrder(PlaceOrderCommand command) {
+        Order order = Order.builder()
+                .recipient(command.getRecipient())
+                .items(command.getOrderItems())
+                .build();
+        Order save = orderRepository.save(order);
+        return PlaceOrderResponse.success(save.getId());
     }
 
     @Override
     public void deleteOrderById(Long id) {
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateOrderStatus(Long id, OrderStatus status) {
+        orderRepository.findById(id)
+                .ifPresent(order -> {
+                    order.setStatus(status);
+                    orderRepository.save(order);
+                });
     }
 }
