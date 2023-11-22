@@ -35,7 +35,7 @@ public class QueryOrderService implements QueryOrderUseCase {
 
     private RichOrder toRichOrder(Order order) {
         List<RichOrderItem> richItems = toRichItems(order.getItems());
-        return new RichOrder(order.getId, order.getStatus(), richItems, order.getRecipient(), order.getCreatedAt());
+        return new RichOrder(order.getId(), order.getStatus(), richItems, order.getRecipient(), order.getCreatedAt());
     }
 
     private List<RichOrderItem> toRichItems(List<OrderItem> items) {

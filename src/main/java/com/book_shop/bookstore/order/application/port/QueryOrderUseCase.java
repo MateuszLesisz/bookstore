@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QueryOrderUseCase {
-    List<Order> findAll();
-    Optional<Order> findById(Long id);
+    List<RichOrder> findAll();
+    Optional<RichOrder> findById(Long id);
 
     @Value
     class RichOrder {
