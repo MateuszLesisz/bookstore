@@ -22,6 +22,17 @@ class CatalogService implements CatalogUseCase {
     private final UploadUseCase upload;
 
     @Override
+    public List<Book> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        return repository.findById(id);
+    }
+
+
+    @Override
     public List<Book> findByTitle(String title) {
         return repository.findAll()
                 .stream()
@@ -64,19 +75,8 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public List<Book> findAll() {
-        return repository.findAll();
-    }
-
-    @Override
     public Book addBook(CreateBookCommand bookCommand) {
         return repository.save(bookCommand.toBook());
-    }
-
-    @Override
-    public void removeById(Long id) {
-        repository.deleteById(id);
-
     }
 
     @Override
@@ -91,8 +91,9 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public Optional<Book> findById(Long id) {
-        return repository.findById(id);
+    public void removeById(Long id) {
+        repository.deleteById(id);
+
     }
 
     @Override
