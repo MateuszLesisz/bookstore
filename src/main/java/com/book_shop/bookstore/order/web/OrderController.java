@@ -1,6 +1,6 @@
 package com.book_shop.bookstore.order.web;
 
-import com.book_shop.bookstore.order.application.port.PlaceOrderUseCase;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
 import com.book_shop.bookstore.order.domain.Order;
 import com.book_shop.bookstore.order.domain.OrderItem;
@@ -21,7 +21,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.book_shop.bookstore.order.application.port.PlaceOrderUseCase.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -29,7 +28,7 @@ import static com.book_shop.bookstore.order.application.port.PlaceOrderUseCase.*
 public class OrderController {
 
     private final QueryOrderUseCase queryOrderUseCase;
-    private final PlaceOrderUseCase placeOrderUseCase;
+    private final ManipulateOrderUseCase manipulateOrderUseCase;
 
 
     @GetMapping
@@ -49,7 +48,7 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> addOrder(@Valid @RequestBody RestOrderCommand command) {
-        return ResponseEntity.created(createOrderUri(placeOrderUseCase.addOrder(command.toOrderCommand()))).build();
+        return ResponseEntity.created(createOrderUri(manipulateOrderUseCase.addOrder(command.toOrderCommand()))).build();
     }
 
     private static URI createOrderUri(Order order) {
@@ -60,7 +59,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateOrder(@PathVariable Long id,
                             @RequestBody RestOrderCommand command) {
-        UpdateOrderResponse response = placeOrderUseCase.updateOrder(command.toUpdateOrderCommand(id));
+        UpdateOrderResponse response = manipulateOrderUseCase.updateOrder(command.toUpdateOrderCommand(id));
         if (!response.isSuccess()) {
             String message = String.join(", ", response.getErrors());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
@@ -70,7 +69,7 @@ public class OrderController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeOrder(@PathVariable Long id) {
-        placeOrderUseCase.removeOrder(id);
+        manipulateOrderUseCase.deleteOrderById(id);
     }
 
     @Data

@@ -4,9 +4,8 @@ package com.book_shop.bookstore;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import com.book_shop.bookstore.catalog.domain.Book;
-import com.book_shop.bookstore.order.application.port.PlaceOrderUseCase;
-import com.book_shop.bookstore.order.application.port.PlaceOrderUseCase.PlaceOrderCommand;
-import com.book_shop.bookstore.order.application.port.PlaceOrderUseCase.PlaceOrderResponse;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
 import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.Recipient;
@@ -21,7 +20,7 @@ import java.util.List;
 public class ApplicationStartup implements CommandLineRunner {
 
     private final CatalogUseCase catalogUseCase;
-    private final PlaceOrderUseCase placeOrder;
+    private final ManipulateOrderUseCase placeOrder;
     private final QueryOrderUseCase queryOrder;
     private final String title;
     private final Long limit;
@@ -29,7 +28,7 @@ public class ApplicationStartup implements CommandLineRunner {
 
     public ApplicationStartup(
             CatalogUseCase catalogUseCase,
-            PlaceOrderUseCase placeOrder,
+            ManipulateOrderUseCase placeOrder,
             QueryOrderUseCase queryOrder,
             @Value("${book.catalog.query}") String title,
             @Value("${book.catalog.limit}") Long limit,

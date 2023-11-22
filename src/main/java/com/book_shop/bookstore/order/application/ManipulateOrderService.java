@@ -1,6 +1,6 @@
 package com.book_shop.bookstore.order.application;
 
-import com.book_shop.bookstore.order.application.port.PlaceOrderUseCase;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.db.OrderJpaRepository;
 import com.book_shop.bookstore.order.domain.Order;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.Collections;
 
 @Service
 @AllArgsConstructor
-public class ManipulateOrderService implements PlaceOrderUseCase {
+public class ManipulateOrderService implements ManipulateOrderUseCase {
 
     private final OrderJpaRepository orderRepository;
 
@@ -32,7 +32,7 @@ public class ManipulateOrderService implements PlaceOrderUseCase {
     }
 
     @Override
-    public void removeOrder(Long id) {
+    public void deleteOrderById(Long id) {
         orderRepository.deleteById(id);
     }
 }
