@@ -9,8 +9,8 @@ import java.util.Optional;
 public interface UploadUseCase {
 
     Upload save(SaveUploadCommand command);
-    Optional<Upload> getBtId(String id);
-    void removeById(String id);
+    Optional<Upload> getById(Long id);
+    void removeById(Long id);
 
     @Value
     @AllArgsConstructor

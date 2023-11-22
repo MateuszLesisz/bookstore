@@ -23,16 +23,16 @@ public class UploadsController {
     private final UploadUseCase upload;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UploadResponse> getUpload(@PathVariable String id) {
-        return upload.getBtId(id).map(file -> {
+    public ResponseEntity<UploadResponse> getUpload(@PathVariable Long id) {
+        return upload.getById(id).map(file -> {
             UploadResponse response = new UploadResponse(file.getId(), file.getContentType(), file.getFileName(), file.getCreatedAt());
             return ResponseEntity.ok(response);
         }).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/file")
-    public ResponseEntity<Resource> getUploadFile(@PathVariable String id) {
-        return upload.getBtId(id)
+    public ResponseEntity<Resource> getUploadFile(@PathVariable Long id) {
+        return upload.getById(id)
                 .map(file -> {
                     String contentDisposition = "attachment: filename=\"" + file.getFileName() + "\"";
                     Resource resource = new ByteArrayResource(file.getFile());
@@ -48,7 +48,7 @@ public class UploadsController {
     @Value
     @AllArgsConstructor
     static class UploadResponse {
-        String id;
+        Long id;
         String contentType;
         String fileName;
         LocalDateTime createdAt;
