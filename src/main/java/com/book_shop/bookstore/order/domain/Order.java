@@ -30,6 +30,7 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private List<OrderItem> items;
+    @ManyToOne(cascade = CascadeType.ALL)
     private Recipient recipient;
     @CreatedDate
     private LocalDateTime createdAt;
