@@ -18,8 +18,6 @@ import static java.util.Collections.emptyList;
 
 public interface PlaceOrderUseCase {
 
-    PlaceOrderResponse placeOrder(PlaceOrderCommand placeOrderCommand);
-
     Order addOrder(OrderCommand createOrderCommand);
     UpdateOrderResponse updateOrder(UpdateOrderCommand updateOrderCommand);
     void removeOrder(Long id);
@@ -40,26 +38,15 @@ public interface PlaceOrderUseCase {
         LocalDateTime createdAt;
 
         public Order toOrder() {
-            return Order.builder()
-                    .status(status)
-                    .items(items)
-                    .recipient(recipient)
-                    .createdAt(createdAt)
-                    .build();
+            return new Order(status, items, recipient, createdAt);
         }
     }
 
     @Value
     class OrderItemCommand {
+
         Book book;
         Integer quantity;
-
-        public OrderItem toOrderItem() {
-            return OrderItem.builder()
-                    .book(book)
-                    .quantity(quantity)
-                    .build();
-        }
     }
 
     @Value
@@ -71,17 +58,6 @@ public interface PlaceOrderUseCase {
         String zipCode;
         String email;
 
-        public Recipient toRecipient() {
-            return Recipient.builder()
-                    .name(name)
-                    .phone(phone)
-                    .street(street)
-                    .city(city)
-                    .zipCode(zipCode)
-                    .email(email)
-                    .build();
-        }
-
     }
 
     @Value
@@ -90,13 +66,6 @@ public interface PlaceOrderUseCase {
         Long orderId;
         List<String> errors;
 
-        public static PlaceOrderResponse success(Long orderId) {
-            return new PlaceOrderResponse(true, orderId, emptyList());
-        }
-
-        public static PlaceOrderResponse failure(String... errors) {
-            return new PlaceOrderResponse(false, null, Arrays.asList(errors));
-        }
     }
 
     @Value

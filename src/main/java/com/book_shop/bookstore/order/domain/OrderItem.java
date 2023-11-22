@@ -1,17 +1,23 @@
 package com.book_shop.bookstore.order.domain;
 
-import com.book_shop.bookstore.catalog.domain.Book;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.*;
 
+@Data
+@Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Builder
 public class OrderItem {
 
-    private Book book;
-    int quantity;
+    @Id
+    @GeneratedValue
+    private Long id;
+    private Long bookId;
+    private int quantity;
+
+    public OrderItem(Long bookId, int quantity) {
+        this.bookId = bookId;
+        this.quantity = quantity;
+    }
 }

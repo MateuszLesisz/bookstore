@@ -66,16 +66,8 @@ public class ApplicationStartup implements CommandLineRunner {
         PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .orderItem(new OrderItem(harryPotter, 12))
+                .orderItem(new OrderItem(harryPotter.getId(), 12))
                 .build();
-
-        PlaceOrderResponse response = placeOrder.placeOrder(command);
-        System.out.println("Created ORDER with id: " + response.getOrderId());
-
-        queryOrder.findAll()
-                .forEach(order -> {
-                    System.out.println("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + "DETAILS: " + order);
-                });
     }
 
     private void searchCatalog() {

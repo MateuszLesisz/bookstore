@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     private String title;
     private String author;
