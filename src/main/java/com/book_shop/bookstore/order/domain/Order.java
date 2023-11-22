@@ -30,7 +30,7 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private List<OrderItem> items;
-    private transient Recipient recipient;
+    private Recipient recipient;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
