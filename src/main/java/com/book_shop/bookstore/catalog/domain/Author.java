@@ -1,43 +1,27 @@
 package com.book_shop.bookstore.catalog.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@Getter
-@Setter
 @Entity
+@Data
 @EntityListeners(AuditingEntityListener.class)
-public class Book {
-
+public class Author {
     @Id
     @GeneratedValue
     private Long id;
-    private String title;
-    private Integer year;
-    private BigDecimal price;
-    private Long coverId;
+    private String firstName;
+    private String lastName;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-    private Set<Author> authors;
-
-    public Book(String title, Integer year, BigDecimal price) {
-        this.title = title;
-        this.year = year;
-        this.price = price;
-    }
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
+    private Set<Book> books;
 }
