@@ -1,6 +1,5 @@
 package com.book_shop.bookstore.catalog.application.port;
 
-import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +29,7 @@ public interface CatalogUseCase {
     class CreateBookCommand {
 
         String title;
-        Set<Long> author;
+        Set<Long> authors;
         Integer year;
         BigDecimal price;
     }
@@ -42,25 +41,9 @@ public interface CatalogUseCase {
 
         Long id;
         String title;
-        Set<Author> author;
+        Set<Long> authors;
         Integer year;
         BigDecimal price;
-
-        public Book updateFields(Book book) {
-            if (title != null) {
-                book.setTitle(title);
-            }
-//            if (author != null) {
-//                book.setAuthor(author);
-//            }
-            if (year != null) {
-                book.setYear(year);
-            }
-            if(price != null) {
-                book.setPrice(price);
-            }
-            return book;
-        }
     }
 
     @Value
