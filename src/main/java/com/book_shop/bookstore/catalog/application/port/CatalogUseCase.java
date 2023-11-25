@@ -1,5 +1,6 @@
 package com.book_shop.bookstore.catalog.application.port;
 
+import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Value;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 
@@ -29,13 +31,9 @@ public interface CatalogUseCase {
     class CreateBookCommand {
 
         String title;
-        String author;
+        Set<Long> author;
         Integer year;
         BigDecimal price;
-
-        public Book toBook() {
-            return new Book(title, year, price);
-        }
     }
 
     @Value
@@ -45,7 +43,7 @@ public interface CatalogUseCase {
 
         Long id;
         String title;
-        String author;
+        Set<Author> author;
         Integer year;
         BigDecimal price;
 

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.book_shop.bookstore.catalog.application.port.CatalogUseCase.*;
 
@@ -83,7 +84,7 @@ public class CatalogController {
 
     @PutMapping(value = "{id}/cover", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addBookCover(@PathVariable Long id, @RequestParam("file")MultipartFile file) throws IOException {
+    public void addBookCover(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
         System.out.println("Got file: " + file.getOriginalFilename());
         catalog.updateBookCover(new UpdateBookCoverCommand(id, file.getBytes(), file.getContentType(), file.getOriginalFilename()));
     }
@@ -99,8 +100,8 @@ public class CatalogController {
     private static class RestBookCommand {
         @NotBlank(message = "Please provide a title.")
         private String title;
-        @NotBlank(message = "Please provide an author.")
-        private String author;
+//        @NotBlank(message = "Please provide an author.")
+//        private String author;
         @NotNull
         private Integer year;
         @NotNull
@@ -108,11 +109,11 @@ public class CatalogController {
         private BigDecimal price;
 
         CreateBookCommand toCreateCommand() {
-            return new CreateBookCommand(title, author, year, price);
+            return new CreateBookCommand(title, Set.of(), year, price);
         }
 
         UpdateBookCommand toUpdateBookCommand(Long id) {
-            return new UpdateBookCommand(id, title, author, year, price);
+            return new UpdateBookCommand(id, title, Set.of(), year, price);
         }
     }
 }

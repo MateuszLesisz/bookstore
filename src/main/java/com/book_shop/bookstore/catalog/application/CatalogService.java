@@ -1,7 +1,9 @@
 package com.book_shop.bookstore.catalog.application;
 
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
+import com.book_shop.bookstore.catalog.db.AuthorJpaRepository;
 import com.book_shop.bookstore.catalog.db.BookJpaRepository;
+import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.uploads.application.port.UploadUseCase;
 import com.book_shop.bookstore.uploads.application.port.UploadUseCase.SaveUploadCommand;
@@ -12,29 +14,32 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
 class CatalogService implements CatalogUseCase {
-    private final BookJpaRepository repository;
+    private final BookJpaRepository bookRepository;
     private final UploadUseCase upload;
+    private final AuthorJpaRepository authorRepository;
 
     @Override
     public List<Book> findAll() {
-        return repository.findAll();
+        return bookRepository.findAll();
     }
 
     @Override
     public Optional<Book> findById(Long id) {
-        return repository.findById(id);
+        return bookRepository.findById(id);
     }
 
 
     @Override
     public List<Book> findByTitle(String title) {
-        return repository.findAll()
+        return bookRepository.findAll()
                 .stream()
                 .filter(book -> book.getTitle().toLowerCase().startsWith(title.toLowerCase()))
                 .collect(toList());
@@ -42,7 +47,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public Optional<Book> findOneByTitle(String title) {
-        return repository.findAll()
+        return bookRepository.findAll()
                 .stream()
                 .filter(book -> book.getTitle().startsWith(title))
                 .findFirst();
@@ -50,7 +55,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public List<Book> findByAuthor(String author) {
-        return repository.findAll()
+        return bookRepository.findAll()
                 .stream()
 //                .filter(book -> book.getAuthor().toLowerCase().startsWith(author.toLowerCase()))
                 .collect(toList());
@@ -58,7 +63,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
-        return repository.findAll()
+        return bookRepository.findAll()
                 .stream()
                 .filter(book -> book.getTitle().startsWith(title))
 //                .filter(book -> book.getAuthor().startsWith(author))
@@ -67,7 +72,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public List<Book> findByTitleAndAuthor(String title, String author) {
-        return repository.findAll()
+        return bookRepository.findAll()
                 .stream()
 //                .filter(book -> book.getAuthor().toLowerCase().startsWith(author.toLowerCase()))
                 .filter(book -> book.getTitle().toLowerCase().startsWith(title.toLowerCase()))
@@ -76,15 +81,16 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public Book addBook(CreateBookCommand bookCommand) {
-        return repository.save(bookCommand.toBook());
+        Book book  = toBook(bookCommand);
+        return bookRepository.save(book);
     }
 
     @Override
     public UpdateBookResponse updateBook(UpdateBookCommand updateBookCommand) {
-        return repository.findById(updateBookCommand.getId())
+        return bookRepository.findById(updateBookCommand.getId())
                 .map(book -> {
                     Book updatedBook = updateBookCommand.updateFields(book);
-                    repository.save(updatedBook);
+                    bookRepository.save(updatedBook);
                     return UpdateBookResponse.SUCCESS;
                 })
                 .orElseGet(() -> new UpdateBookResponse(false, Collections.singletonList("Book not found with id: " + updateBookCommand.getId())));
@@ -92,30 +98,42 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void removeById(Long id) {
-        repository.deleteById(id);
+        bookRepository.deleteById(id);
 
     }
 
     @Override
     public void updateBookCover(UpdateBookCoverCommand command) {
-        repository.findById(command.getId())
+        bookRepository.findById(command.getId())
                 .ifPresent(book -> {
                     Upload savedUpload = upload.save(new SaveUploadCommand(command.getFileName(), command.getFile(), command.getContentType()));
                     book.setCoverId(savedUpload.getId());
-                    repository.save(book);
+                    bookRepository.save(book);
 
-        });
+                });
     }
 
     @Override
     public void removeBookCover(Long id) {
-        repository.findById(id)
+        bookRepository.findById(id)
                 .ifPresent(book -> {
-                    if(book.getCoverId() != null) {
+                    if (book.getCoverId() != null) {
                         upload.removeById(book.getCoverId());
                         book.setCoverId(null);
-                        repository.save(book);
+                        bookRepository.save(book);
                     }
                 });
+    }
+
+    private Book toBook(CreateBookCommand command) {
+        Book book = new Book(command.getTitle(), command.getYear(), command.getPrice());
+        Set<Author> authors = command.getAuthor().stream()
+                .map(authorId -> authorRepository
+                                .findById(authorId)
+                                .orElseThrow(() -> new IllegalArgumentException("Unable to find author with id: " + authorId))
+                )
+                .collect(Collectors.toSet());
+        book.setAuthors(authors);
+        return book;
     }
 }

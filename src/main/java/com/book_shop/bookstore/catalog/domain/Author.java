@@ -2,6 +2,8 @@ package com.book_shop.bookstore.catalog.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,6 +14,8 @@ import java.util.Set;
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@ToString(exclude = "books")
 public class Author {
     @Id
     @GeneratedValue
@@ -24,4 +28,9 @@ public class Author {
     private LocalDateTime updatedAt;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
     private Set<Book> books;
+
+    public Author(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
