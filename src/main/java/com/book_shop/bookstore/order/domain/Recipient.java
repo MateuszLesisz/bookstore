@@ -1,19 +1,17 @@
 package com.book_shop.bookstore.order.domain;
 
+import com.book_shop.bookstore.jpa.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.*;
 
-@Data
+@Entity
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Recipient {
+public class Recipient extends BaseEntity {
 
-    @Id
-    @GeneratedValue
     private Long id;
     private String name;
     private String phone;
@@ -23,11 +21,11 @@ public class Recipient {
     private String email;
 
     public Recipient(String name, String phone, String street, String city, String zipCode, String email) {
-           this.name = name;
-           this.phone = phone;
-           this.street = street;
-           this.city = city;
-           this.zipCode = zipCode;
-           this.email = email;
+        this.name = name;
+        this.phone = phone;
+        this.street = street;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.email = email;
     }
 }

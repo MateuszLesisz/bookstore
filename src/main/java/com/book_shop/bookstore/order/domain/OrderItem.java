@@ -1,9 +1,8 @@
 package com.book_shop.bookstore.order.domain;
 
+import com.book_shop.bookstore.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,14 +10,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
-public class OrderItem {
+public class OrderItem extends BaseEntity {
 
-    @Id
-    @GeneratedValue
     private Long id;
     private Long bookId;
     private int quantity;

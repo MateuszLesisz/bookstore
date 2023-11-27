@@ -1,5 +1,6 @@
 package com.book_shop.bookstore.catalog.domain;
 
+import com.book_shop.bookstore.jpa.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,11 +20,8 @@ import java.util.Set;
 @Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Book {
+public class Book extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     private String title;
     private Integer year;
     private BigDecimal price;

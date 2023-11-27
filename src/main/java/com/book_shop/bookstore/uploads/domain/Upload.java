@@ -1,24 +1,24 @@
 package com.book_shop.bookstore.uploads.domain;
 
+import com.book_shop.bookstore.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-public class Upload {
-    @Id
-    @GeneratedValue
+public class Upload extends BaseEntity {
+
     private Long id;
     private byte[] file;
     private String contentType;
