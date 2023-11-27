@@ -17,8 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 @Service
 @AllArgsConstructor
 class CatalogService implements CatalogUseCase {
@@ -39,35 +37,22 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public List<Book> findByTitle(String title) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book.getTitle().toLowerCase().startsWith(title.toLowerCase()))
-                .collect(toList());
+        return bookRepository.findByTitleStartingWithIgnoreCase(title);
     }
 
     @Override
     public Optional<Book> findOneByTitle(String title) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book.getTitle().startsWith(title))
-                .findFirst();
+        return bookRepository.findByTitle(title);
     }
 
     @Override
     public List<Book> findByAuthor(String author) {
-        return bookRepository.findAll()
-                .stream()
-//                .filter(book -> book.getAuthor().toLowerCase().startsWith(author.toLowerCase()))
-                .collect(toList());
+        return bookRepository.findByAuthor(author);
     }
 
     @Override
     public List<Book> findByTitleAndAuthor(String title, String author) {
-        return bookRepository.findAll()
-                .stream()
-//                .filter(book -> book.getAuthor().toLowerCase().startsWith(author.toLowerCase()))
-                .filter(book -> book.getTitle().toLowerCase().startsWith(title.toLowerCase()))
-                .collect(toList());
+        return bookRepository.findByTitleAndAuthor(title, author);
     }
 
     @Override
