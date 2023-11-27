@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,10 +30,20 @@ public class Author {
     private LocalDateTime updatedAt;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
     @JsonIgnoreProperties("authors")
-    private Set<Book> books;
+    private Set<Book> books = new HashSet<>();
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
+        book.getAuthors().add(this);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
+        book.getAuthors().remove(this);
     }
 }
