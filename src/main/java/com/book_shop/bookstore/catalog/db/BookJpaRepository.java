@@ -31,4 +31,7 @@ public interface BookJpaRepository extends JpaRepository<Book, Long> {
     )
     List<Book> findByTitleAndAuthor(@Param("title")String title, @Param("author")String author);
 
+    @Query(" SELECT b FROM Book b JOIN FETCH b.authors")
+    List<Book> findAllEager();
+
 }
