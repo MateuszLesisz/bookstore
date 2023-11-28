@@ -10,6 +10,7 @@ import com.book_shop.bookstore.uploads.application.port.UploadUseCase.SaveUpload
 import com.book_shop.bookstore.uploads.domain.Upload;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +57,7 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
+    @Transactional
     public Book addBook(CreateBookCommand bookCommand) {
         Book book  = toBook(bookCommand);
         return bookRepository.save(book);
