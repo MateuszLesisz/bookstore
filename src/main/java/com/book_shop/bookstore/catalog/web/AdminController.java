@@ -1,38 +1,38 @@
-package com.book_shop.bookstore;
-
+package com.book_shop.bookstore.catalog.web;
 
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.db.AuthorJpaRepository;
 import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
-import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
 import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.Recipient;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
-import static com.book_shop.bookstore.catalog.application.port.CatalogUseCase.*;
-
-@Component
+@RestController
+@RequestMapping("/admin")
 @AllArgsConstructor
-public class ApplicationStartup implements CommandLineRunner {
+public class AdminController {
 
     private final CatalogUseCase catalogUseCase;
     private final ManipulateOrderUseCase placeOrder;
     private final QueryOrderUseCase queryOrder;
     private final AuthorJpaRepository authorRepository;
 
-
-    @Override
-    public void run(String... args) {
+    @PostMapping("/data")
+    @Transactional
+    public void initialize() {
         initData();
         placeOrder();
+
     }
 
     private void placeOrder() {
@@ -48,7 +48,7 @@ public class ApplicationStartup implements CommandLineRunner {
                 .email("jan@example.org")
                 .build();
 
-        PlaceOrderCommand command = PlaceOrderCommand
+        ManipulateOrderUseCase.PlaceOrderCommand command = ManipulateOrderUseCase.PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
                 .orderItem(new OrderItem(effectiveJava.getId(), 12))
@@ -72,10 +72,11 @@ public class ApplicationStartup implements CommandLineRunner {
         Author neal = new Author("Neal", "Gafter");
         authorRepository.save(joshua);
         authorRepository.save(neal);
-        CreateBookCommand effectiveJava = new CreateBookCommand("Effective Java", Set.of(joshua.getId()), 2005, BigDecimal.valueOf(79.99));
-        CreateBookCommand javaPuzzlers = new CreateBookCommand("Java Puzzlers", Set.of(joshua.getId(), neal.getId()), 2018, BigDecimal.valueOf(99.99));
+        CatalogUseCase.CreateBookCommand effectiveJava = new CatalogUseCase.CreateBookCommand("Effective Java", Set.of(joshua.getId()), 2005, BigDecimal.valueOf(79.99));
+        CatalogUseCase.CreateBookCommand javaPuzzlers = new CatalogUseCase.CreateBookCommand("Java Puzzlers", Set.of(joshua.getId(), neal.getId()), 2018, BigDecimal.valueOf(99.99));
 
         catalogUseCase.addBook(effectiveJava);
         catalogUseCase.addBook(javaPuzzlers);
     }
+
 }
