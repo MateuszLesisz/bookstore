@@ -32,7 +32,7 @@ public class ManipulateOrderService implements ManipulateOrderUseCase {
     public void updateOrderStatus(Long id, OrderStatus status) {
         orderRepository.findById(id)
                 .ifPresent(order -> {
-                    order.setStatus(status);
+                    order.updateStatus(status);
                     orderRepository.save(order);
                 });
     }

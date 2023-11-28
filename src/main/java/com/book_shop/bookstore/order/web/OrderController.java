@@ -4,24 +4,18 @@ import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase.RichOrder;
-import com.book_shop.bookstore.order.domain.Order;
 import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
 import com.book_shop.bookstore.web.CreatedURI;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,8 +60,8 @@ public class OrderController {
 
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateOrder(@PathVariable Long id,
-                            @RequestBody UpdateStatusCommand command) {
+    public void updateOrderStatus(@PathVariable Long id,
+                                  @RequestBody UpdateStatusCommand command) {
         OrderStatus orderStatus = OrderStatus
                 .parseString(command.status)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown status: " + command.status));
