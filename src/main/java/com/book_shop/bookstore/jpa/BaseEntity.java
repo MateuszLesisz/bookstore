@@ -20,7 +20,6 @@ public abstract class BaseEntity {
     @GeneratedValue
     private Long id;
     private String uuid = UUID.randomUUID().toString();
-
     @Version
     private long version;
 }
