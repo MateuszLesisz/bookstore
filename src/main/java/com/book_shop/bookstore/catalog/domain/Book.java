@@ -30,6 +30,8 @@ public class Book extends BaseEntity {
 
     private Long coverId;
 
+    private Long available;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -41,10 +43,11 @@ public class Book extends BaseEntity {
     @JsonIgnoreProperties("books")
     private Set<Author> authors = new HashSet<>();
 
-    public Book(String title, Integer year, BigDecimal price) {
+    public Book(String title, Integer year, BigDecimal price, Long available) {
         this.title = title;
         this.year = year;
         this.price = price;
+        this.available = available;
     }
 
     public void addAuthor(Author author) {

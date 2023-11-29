@@ -5,8 +5,8 @@ import com.book_shop.bookstore.catalog.db.AuthorJpaRepository;
 import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
-import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.Recipient;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +51,8 @@ public class AdminController {
         ManipulateOrderUseCase.PlaceOrderCommand command = ManipulateOrderUseCase.PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .orderItem(new OrderItem(effectiveJava.getId(), 12))
-                .orderItem(new OrderItem(puzzlers.getId(), 12))
+                .orderItem(new OrderItemCommand(effectiveJava.getId(), 12))
+                .orderItem(new OrderItemCommand(puzzlers.getId(), 12))
                 .build();
 
         ManipulateOrderUseCase.PlaceOrderResponse response = placeOrder.placeOrder(command);
@@ -72,8 +72,8 @@ public class AdminController {
         Author neal = new Author("Neal", "Gafter");
         authorRepository.save(joshua);
         authorRepository.save(neal);
-        CatalogUseCase.CreateBookCommand effectiveJava = new CatalogUseCase.CreateBookCommand("Effective Java", Set.of(joshua.getId()), 2005, BigDecimal.valueOf(79.99));
-        CatalogUseCase.CreateBookCommand javaPuzzlers = new CatalogUseCase.CreateBookCommand("Java Puzzlers", Set.of(joshua.getId(), neal.getId()), 2018, BigDecimal.valueOf(99.99));
+        CatalogUseCase.CreateBookCommand effectiveJava = new CatalogUseCase.CreateBookCommand("Effective Java", Set.of(joshua.getId()), 2005, BigDecimal.valueOf(79.99), 100L);
+        CatalogUseCase.CreateBookCommand javaPuzzlers = new CatalogUseCase.CreateBookCommand("Java Puzzlers", Set.of(joshua.getId(), neal.getId()), 2018, BigDecimal.valueOf(99.99), 100L);
 
         catalogUseCase.addBook(effectiveJava);
         catalogUseCase.addBook(javaPuzzlers);

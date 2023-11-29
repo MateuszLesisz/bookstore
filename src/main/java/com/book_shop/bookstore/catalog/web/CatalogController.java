@@ -3,10 +3,7 @@ package com.book_shop.bookstore.catalog.web;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.domain.Book;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -105,12 +102,14 @@ public class CatalogController {
         private Set<Long> authors;
         @NotNull
         private Integer year;
+        @PositiveOrZero
+        private Long available;
         @NotNull
         @DecimalMin("0.00")
         private BigDecimal price;
 
         CreateBookCommand toCreateCommand() {
-            return new CreateBookCommand(title, authors, year, price);
+            return new CreateBookCommand(title, authors, year, price, available);
         }
 
         UpdateBookCommand toUpdateBookCommand(Long id) {

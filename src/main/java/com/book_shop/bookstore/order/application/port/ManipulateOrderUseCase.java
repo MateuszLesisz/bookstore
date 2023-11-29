@@ -1,13 +1,9 @@
 package com.book_shop.bookstore.order.application.port;
 
 import com.book_shop.bookstore.commons.Either;
-import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Singular;
-import lombok.Value;
+import lombok.*;
 
 import java.util.List;
 
@@ -22,8 +18,14 @@ public interface ManipulateOrderUseCase {
     @AllArgsConstructor
     class PlaceOrderCommand {
         @Singular
-        List<OrderItem> orderItems;
+        List<OrderItemCommand> orderItems;
         Recipient recipient;
+    }
+
+    @Value
+    class OrderItemCommand {
+        Long bookId;
+        int quantity;
     }
 
     class PlaceOrderResponse extends Either<String, Long> {
