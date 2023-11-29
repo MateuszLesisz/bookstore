@@ -19,6 +19,7 @@
         <commons.lang.version>3.13.0</commons.lang.version>
         <org.springdoc.version>2.2.0</org.springdoc.version>
         <org.postgres.version>42.6.0</org.postgres.version>
+        <opencsv.version>5.7.1</opencsv.version>
     </properties>
     <dependencies>
 
@@ -79,6 +80,11 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${opencsv.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
