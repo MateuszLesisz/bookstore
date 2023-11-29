@@ -4,7 +4,9 @@ import com.book_shop.bookstore.catalog.application.port.CatalogInitializerUseCas
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase.CreateBookCommand;
 import com.book_shop.bookstore.catalog.db.AuthorJpaRepository;
+import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
+import com.book_shop.bookstore.jpa.BaseEntity;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
 import com.book_shop.bookstore.order.domain.Recipient;
@@ -15,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +26,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
@@ -56,8 +62,20 @@ public class CatalogInitializerService implements CatalogInitializerUseCase {
     }
 
     private void initBook(CsvBook csvBook) {
-        CreateBookCommand command = new CreateBookCommand(csvBook.title, Set.of(), csvBook.year, csvBook.amount, 50L);
+        Set<Long> authors = Arrays.stream(csvBook.authors.split(","))
+                .filter(StringUtils::isNotBlank)
+                .map(String::trim)
+                .map(this::getOrCreateAuthor)
+                .map(BaseEntity::getId)
+                .collect(toSet());
+
+        CreateBookCommand command = new CreateBookCommand(csvBook.title, authors, csvBook.year, csvBook.amount, 50L);
         catalogUseCase.addBook(command);
+    }
+
+    private Author getOrCreateAuthor(String name) {
+        return authorRepository.findByNameIgnoreCase(name)
+                .orElseGet(() -> authorRepository.save(new Author(name)));
     }
 
     private void placeOrder() {
@@ -95,7 +113,7 @@ public class CatalogInitializerService implements CatalogInitializerUseCase {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    static class CsvBook {
+    public static class CsvBook {
         @CsvBindByName
         private String title;
         @CsvBindByName

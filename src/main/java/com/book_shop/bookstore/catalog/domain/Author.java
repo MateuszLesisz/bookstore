@@ -2,8 +2,14 @@ package com.book_shop.bookstore.catalog.domain;
 
 import com.book_shop.bookstore.jpa.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.ManyToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,10 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = "books")
 public class Author extends BaseEntity {
-
-    private String firstName;
-
-    private String lastName;
+    private String name;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -34,8 +37,7 @@ public class Author extends BaseEntity {
     @JsonIgnoreProperties("authors")
     private Set<Book> books = new HashSet<>();
 
-    public Author(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Author(String name) {
+        this.name = name;
     }
 }
