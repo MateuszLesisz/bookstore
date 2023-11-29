@@ -4,9 +4,11 @@ import com.book_shop.bookstore.catalog.db.BookJpaRepository;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.db.OrderJpaRepository;
+import com.book_shop.bookstore.order.db.RecipientJpaRepository;
 import com.book_shop.bookstore.order.domain.Order;
 import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.OrderStatus;
+import com.book_shop.bookstore.order.domain.Recipient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import static java.util.stream.Collectors.toSet;
 public class ManipulateOrderService implements ManipulateOrderUseCase {
     private final OrderJpaRepository orderRepository;
     private final BookJpaRepository bookRepository;
+    private final RecipientJpaRepository recipientJpaRepository;
 
     @Override
     public PlaceOrderResponse placeOrder(PlaceOrderCommand command) {
@@ -28,7 +31,7 @@ public class ManipulateOrderService implements ManipulateOrderUseCase {
                 .map(this::toOrderItem)
                 .collect(toSet());
         Order order = Order.builder()
-                .recipient(command.getRecipient())
+                .recipient(getOrCreateRecipient(command.getRecipient()))
                 .items(items)
                 .build();
         Order save = orderRepository.save(order);
@@ -52,6 +55,11 @@ public class ManipulateOrderService implements ManipulateOrderUseCase {
                     return book;
                 })
                 .collect(toSet());
+    }
+
+    private Recipient getOrCreateRecipient(Recipient recipient) {
+        return recipientJpaRepository.findByEmailIgnoreCase(recipient.getEmail())
+                .orElse(recipient);
     }
 
     @Override
