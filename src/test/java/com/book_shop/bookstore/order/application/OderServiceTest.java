@@ -76,7 +76,7 @@ class OrderServiceTest {
 
     @Test
     public void userCanRevokeOrder() {
-        //give
+        //given
         Book effectiveJava = givenEffectiveJava(50L);
         Long orderId = placeOrder(effectiveJava.getId(), 15);
         assertEquals(35L, availableCopiesOf(effectiveJava));
@@ -87,6 +87,24 @@ class OrderServiceTest {
         //then
         assertEquals(50L, availableCopiesOf(effectiveJava));
         assertEquals(OrderStatus.CANCELED, queryOrderUseCase.findById(orderId).get().getStatus());
+    }
+
+    @Test
+    public void userCannotRevokePaidOrder() {
+        //given
+        Book effectiveJava = givenEffectiveJava(50L);
+        Long orderId = placeOrder(effectiveJava.getId(), 15);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+        orderService.updateOrderStatus(orderId, OrderStatus.PAID);
+
+        //when
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.updateOrderStatus(orderId, OrderStatus.ABANDONED);
+        });
+
+        //then
+        assertEquals(exception.getMessage(), "Unable to mark " + OrderStatus.PAID + " order as " + OrderStatus.ABANDONED);
+
     }
 
 
