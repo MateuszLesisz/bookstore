@@ -37,7 +37,7 @@ public class ManipulateOrderService implements ManipulateOrderUseCase {
     }
 
     private OrderItem toOrderItem(OrderItemCommand command) {
-        Book book = bookRepository.findById(command.getBookId()).orElseThrow(RuntimeException::new);
+        Book book = bookRepository.findById(command.getBookId()).orElseThrow(() -> new IllegalArgumentException("Book does not exist."));
         if (book.getAvailable() >= command.getQuantity()) {
             return new OrderItem(book, command.getQuantity());
         }

@@ -99,12 +99,68 @@ class OrderServiceTest {
 
         //when
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            orderService.updateOrderStatus(orderId, OrderStatus.ABANDONED);
+            orderService.updateOrderStatus(orderId, OrderStatus.CANCELED);
         });
 
         //then
-        assertEquals(exception.getMessage(), "Unable to mark " + OrderStatus.PAID + " order as " + OrderStatus.ABANDONED);
+        assertEquals(exception.getMessage(), "Unable to mark " + OrderStatus.PAID + " order as " + OrderStatus.CANCELED);
 
+    }
+
+    @Test
+    public void userCannotRevokeShippedOrder() {
+        //given
+        Book effectiveJava = givenEffectiveJava(50L);
+        Long orderId = placeOrder(effectiveJava.getId(), 15);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+        orderService.updateOrderStatus(orderId, OrderStatus.PAID);
+        orderService.updateOrderStatus(orderId, OrderStatus.SHIPPED);
+
+        //when
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.updateOrderStatus(orderId, OrderStatus.CANCELED);
+        });
+
+        //then
+        assertEquals(exception.getMessage(), "Unable to mark " + OrderStatus.SHIPPED + " order as " + OrderStatus.CANCELED);
+
+    }
+
+    @Test
+    public void userCannotOrderNoExistingBook() {
+        //given
+        Book effectiveJava = givenEffectiveJava(5L);
+        PlaceOrderCommand command = PlaceOrderCommand
+                .builder()
+                .recipient(recipient())
+                .orderItem(new OrderItemCommand(effectiveJava.getId(), 10))
+                .build();
+
+        //when
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.placeOrder(command);
+        });
+
+        //then
+        assertEquals(exception.getMessage(), "Too many copies of book 1 requested 10 of 5 available.");
+    }
+
+    @Test
+    public void userCannotOrderNegativeNumberOfBooks() {
+        //given
+        PlaceOrderCommand command = PlaceOrderCommand
+                .builder()
+                .recipient(recipient())
+                .orderItem(new OrderItemCommand(20L, 10))
+                .build();
+
+        //when
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.placeOrder(command);
+        });
+
+        //then
+        assertEquals(exception.getMessage(), "Book does not exist.");
     }
 
 
