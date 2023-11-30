@@ -34,22 +34,8 @@ class CatalogControllerIT {
     @Test
     public void getAllBooks() {
         //given
-        Author bloch = authorJpaRepository.save(new Author("Joshua Bloch"));
-        Author goetz = authorJpaRepository.save(new Author("Brian Goetz"));
-        catalogUseCase.addBook(new CreateBookCommand(
-                "Effective Java",
-                Set.of(bloch.getId()),
-                2005,
-                new BigDecimal("99.90"),
-                50L
-        ));
-        catalogUseCase.addBook(new CreateBookCommand(
-                "Java Concurrency in Practice",
-                Set.of(goetz.getId()),
-                2006,
-                new BigDecimal("129.90"),
-                50L
-        ));
+        givenEffectiveJava();
+        givenJavaConcurrencyInPractise();
 
         //when
         List<Book> all = controller.getAll(Optional.empty(), Optional.empty());
@@ -61,22 +47,8 @@ class CatalogControllerIT {
     @Test
     public void getBookByAuthor() {
         //given
-        Author bloch = authorJpaRepository.save(new Author("Joshua Bloch"));
-        Author goetz = authorJpaRepository.save(new Author("Brian Goetz"));
-        catalogUseCase.addBook(new CreateBookCommand(
-                "Effective Java",
-                Set.of(bloch.getId()),
-                2005,
-                new BigDecimal("99.90"),
-                50L
-        ));
-        catalogUseCase.addBook(new CreateBookCommand(
-                "Java Concurrency in Practice",
-                Set.of(goetz.getId()),
-                2006,
-                new BigDecimal("129.90"),
-                50L
-        ));
+        givenEffectiveJava();
+        givenJavaConcurrencyInPractise();
 
         //when
         List<Book> all = controller.getAll(Optional.empty(), Optional.of("Bloch"));
@@ -89,22 +61,8 @@ class CatalogControllerIT {
     @Test
     public void getBookByTitle() {
         //given
-        Author bloch = authorJpaRepository.save(new Author("Joshua Bloch"));
-        Author goetz = authorJpaRepository.save(new Author("Brian Goetz"));
-        catalogUseCase.addBook(new CreateBookCommand(
-                "Effective Java",
-                Set.of(bloch.getId()),
-                2005,
-                new BigDecimal("99.90"),
-                50L
-        ));
-        catalogUseCase.addBook(new CreateBookCommand(
-                "Java Concurrency in Practice",
-                Set.of(goetz.getId()),
-                2006,
-                new BigDecimal("129.90"),
-                50L
-        ));
+        givenEffectiveJava();
+        givenJavaConcurrencyInPractise();
 
         //when
         List<Book> all = controller.getAll(Optional.of("Java Concurrency in Practice"), Optional.empty());
@@ -112,5 +70,27 @@ class CatalogControllerIT {
         //then
         assertEquals(1, all.size());
         assertEquals("Java Concurrency in Practice", all.get(0).getTitle());
+    }
+
+    private void givenEffectiveJava() {
+        Author bloch = authorJpaRepository.save(new Author("Joshua Bloch"));
+        catalogUseCase.addBook(new CreateBookCommand(
+                "Effective Java",
+                Set.of(bloch.getId()),
+                2005,
+                new BigDecimal("99.90"),
+                50L
+        ));
+    }
+
+    private void givenJavaConcurrencyInPractise() {
+        Author goetz = authorJpaRepository.save(new Author("Brian Goetz"));
+        catalogUseCase.addBook(new CreateBookCommand(
+                "Java Concurrency in Practice",
+                Set.of(goetz.getId()),
+                2006,
+                new BigDecimal("129.90"),
+                50L
+        ));
     }
 }
