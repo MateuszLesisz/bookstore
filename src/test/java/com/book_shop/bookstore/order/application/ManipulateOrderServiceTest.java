@@ -1,5 +1,6 @@
 package com.book_shop.bookstore.order.application;
 
+import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.db.BookJpaRepository;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
@@ -8,21 +9,27 @@ import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.Pla
 import com.book_shop.bookstore.order.domain.Recipient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-@Import({ManipulateOrderService.class})
+@SpringBootTest
+@AutoConfigureTestDatabase
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class ManipulateOrderServiceTest {
 
     @Autowired
     BookJpaRepository bookRepository;
     @Autowired
     ManipulateOrderService orderService;
+    @Autowired
+    CatalogUseCase catalogUseCase;
+
     @Test
     public void userCanPlaceOrder() {
         //given
@@ -40,6 +47,8 @@ class ManipulateOrderServiceTest {
 
         //then
         assertTrue(response.isSuccess());
+        assertEquals(40L, catalogUseCase.findById(effectiveJava.getId()).get().getAvailable());
+        assertEquals(40L, catalogUseCase.findById(jcip.getId()).get().getAvailable());
     }
 
     @Test
