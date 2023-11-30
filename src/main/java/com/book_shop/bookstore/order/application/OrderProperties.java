@@ -1,4 +1,4 @@
-package com.book_shop.bookstore.order;
+package com.book_shop.bookstore.order.application;
 
 import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

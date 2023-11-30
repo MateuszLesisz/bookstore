@@ -3,7 +3,7 @@ package com.book_shop.bookstore.order.web;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
-import com.book_shop.bookstore.order.application.port.QueryOrderUseCase.RichOrder;
+import com.book_shop.bookstore.order.application.RichOrder;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.web.CreatedURI;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.book_shop.bookstore.order;
+package com.book_shop.bookstore.order.application;
 
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.db.OrderJpaRepository;
