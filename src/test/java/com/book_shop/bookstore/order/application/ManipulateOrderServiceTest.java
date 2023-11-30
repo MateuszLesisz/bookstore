@@ -6,6 +6,8 @@ import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
+import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
+import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class ManipulateOrderServiceTest {
+class OrderServiceTest {
 
     @Autowired
     BookJpaRepository bookRepository;
@@ -29,6 +31,8 @@ class ManipulateOrderServiceTest {
     ManipulateOrderService orderService;
     @Autowired
     CatalogUseCase catalogUseCase;
+    @Autowired
+    QueryOrderUseCase queryOrderUseCase;
 
     @Test
     public void userCanPlaceOrder() {
@@ -47,8 +51,8 @@ class ManipulateOrderServiceTest {
 
         //then
         assertTrue(response.isSuccess());
-        assertEquals(40L, catalogUseCase.findById(effectiveJava.getId()).get().getAvailable());
-        assertEquals(40L, catalogUseCase.findById(jcip.getId()).get().getAvailable());
+        assertEquals(40L, availableCopiesOf(effectiveJava));
+        assertEquals(40L, availableCopiesOf(jcip));
     }
 
     @Test
@@ -70,6 +74,22 @@ class ManipulateOrderServiceTest {
         assertTrue(exception.getMessage().contains("Too many copies of book " + effectiveJava.getId() + " requested"));
     }
 
+    @Test
+    public void userCanRevokeOrder() {
+        //give
+        Book effectiveJava = givenEffectiveJava(50L);
+        Long orderId = placeOrder(effectiveJava.getId(), 15);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+
+        //when
+        orderService.updateOrderStatus(orderId, OrderStatus.CANCELED);
+
+        //then
+        assertEquals(50L, availableCopiesOf(effectiveJava));
+        assertEquals(OrderStatus.CANCELED, queryOrderUseCase.findById(orderId).get().getStatus());
+    }
+
+
     private Book givenJavaConcurrency(long available) {
         return bookRepository.save(new Book("Java concurrency in Practice", 2006, new BigDecimal("99.90"), available));
     }
@@ -80,5 +100,18 @@ class ManipulateOrderServiceTest {
 
     private Recipient recipient() {
         return Recipient.builder().email("john@example.org").build();
+    }
+
+    public Long placeOrder(Long bookId, int copies) {
+        PlaceOrderCommand command = PlaceOrderCommand
+                .builder()
+                .recipient(recipient())
+                .orderItem(new OrderItemCommand(bookId, copies))
+                .build();
+        return orderService.placeOrder(command).getRight();
+    }
+
+    private Long availableCopiesOf(Book book) {
+        return catalogUseCase.findById(book.getId()).get().getAvailable();
     }
 }
