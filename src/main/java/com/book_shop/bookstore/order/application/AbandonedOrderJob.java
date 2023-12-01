@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.*;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -29,6 +31,11 @@ public class AbandonedOrderJob {
         LocalDateTime olderThan = LocalDateTime.now().minus(paymentPeriod);
         List<Order> orders = orderRepository.findByStatusAndCreatedAtLessThanEqual(OrderStatus.NEW, olderThan);
         log.info("Found orders to be abandoned: " + orders.size());
-        orders.forEach(order -> orderUseCase.updateOrderStatus(order.getId(), OrderStatus.ABANDONED));
+        orders.forEach(order -> {
+            // TODO repair in security model
+            String email = "admin@example.org";
+            UpdateStatusCommand command = new UpdateStatusCommand(order.getId(), OrderStatus.ABANDONED, email);
+            orderUseCase.updateOrderStatus(command);
+        });
     }
 }
