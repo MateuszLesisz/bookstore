@@ -123,11 +123,10 @@ class OrderServiceTest {
         UpdateStatusCommand command = new UpdateStatusCommand(orderId, OrderStatus.PAID, "john@example.org");
         UpdateStatusCommand command2 = new UpdateStatusCommand(orderId, OrderStatus.SHIPPED, "john@example.org");
         UpdateStatusCommand command3 = new UpdateStatusCommand(orderId, OrderStatus.CANCELED, "john@example.org");
-        orderService.updateOrderStatus(command);
-        orderService.updateOrderStatus(command2);
-
 
         //when
+        orderService.updateOrderStatus(command);
+        orderService.updateOrderStatus(command2);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             orderService.updateOrderStatus(command3);
         });
@@ -192,6 +191,43 @@ class OrderServiceTest {
 
     }
 
+    @Test
+    //ToDo: fix in security module
+    public void adminCanRevokeOtherUserOrder() {
+        //given
+        Book effectiveJava = givenEffectiveJava(50L);
+        String recipientEmail = "marek@example.org";
+        Long orderId = placedOrder(effectiveJava.getId(), 15, recipientEmail);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+
+        //when
+        String adminEmail = "admin@example.org";
+        UpdateStatusCommand command = new UpdateStatusCommand(orderId, OrderStatus.CANCELED, adminEmail);
+        orderService.updateOrderStatus(command);
+
+        //then
+        assertEquals(50, availableCopiesOf(effectiveJava));
+        assertEquals(OrderStatus.CANCELED, queryOrderUseCase.findById(orderId).get().getStatus());
+    }
+
+    @Test
+    public void adminCanMarkOrderAsPaid() {
+        //given
+        Book effectiveJava = givenEffectiveJava(50L);
+        String recipientEmail = "marek@example.org";
+        Long orderId = placedOrder(effectiveJava.getId(), 15, recipientEmail);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+
+        //when
+        String adminEmail = "admin@example.org";
+        UpdateStatusCommand command = new UpdateStatusCommand(orderId, OrderStatus.PAID, adminEmail);
+        orderService.updateOrderStatus(command);
+
+        //then
+        assertEquals(35, availableCopiesOf(effectiveJava));
+        assertEquals(OrderStatus.PAID, queryOrderUseCase.findById(orderId).get().getStatus());
+    }
+
     public Long placedOrder(Long bookId, int copies, String recipient) {
         PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
@@ -199,10 +235,6 @@ class OrderServiceTest {
                 .orderItem(new OrderItemCommand(bookId, copies))
                 .build();
         return orderService.placeOrder(command).getRight();
-    }
-
-    public Long placedOrder(Long bookId, int copies) {
-        return placedOrder(bookId, copies, "john@example.org");
     }
 
     private Book givenJavaConcurrency(long available) {
