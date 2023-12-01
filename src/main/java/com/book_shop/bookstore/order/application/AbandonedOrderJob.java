@@ -1,5 +1,6 @@
 package com.book_shop.bookstore.order.application;
 
+import com.book_shop.bookstore.clock.Clock;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
 import com.book_shop.bookstore.order.db.OrderJpaRepository;
 import com.book_shop.bookstore.order.domain.Order;
@@ -23,12 +24,13 @@ public class AbandonedOrderJob {
     private final OrderJpaRepository orderRepository;
     private final ManipulateOrderUseCase orderUseCase;
     private final OrderProperties orderProperties;
+    private final Clock clock;
 
     @Scheduled(cron = "${app.orders.abandon-cron}")
     @Transactional
     public void run() {
         Duration paymentPeriod = orderProperties.getPaymentPeriod();
-        LocalDateTime olderThan = LocalDateTime.now().minus(paymentPeriod);
+        LocalDateTime olderThan = clock.now().minus(paymentPeriod);
         List<Order> orders = orderRepository.findByStatusAndCreatedAtLessThanEqual(OrderStatus.NEW, olderThan);
         log.info("Found orders to be abandoned: " + orders.size());
         orders.forEach(order -> {
