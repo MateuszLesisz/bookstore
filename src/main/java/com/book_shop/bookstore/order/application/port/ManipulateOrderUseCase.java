@@ -1,6 +1,7 @@
 package com.book_shop.bookstore.order.application.port;
 
 import com.book_shop.bookstore.commons.Either;
+import com.book_shop.bookstore.order.domain.Delivery;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
 import lombok.*;
@@ -21,6 +22,7 @@ public interface ManipulateOrderUseCase {
         @Singular
         List<OrderItemCommand> orderItems;
         Recipient recipient;
+        Delivery delivery;
     }
 
     @Value

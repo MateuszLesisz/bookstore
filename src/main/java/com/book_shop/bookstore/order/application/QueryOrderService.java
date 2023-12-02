@@ -1,6 +1,8 @@
 package com.book_shop.bookstore.order.application;
 
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
+import com.book_shop.bookstore.order.application.price.OrderPrice;
+import com.book_shop.bookstore.order.application.price.PriceService;
 import com.book_shop.bookstore.order.db.OrderJpaRepository;
 import com.book_shop.bookstore.order.domain.Order;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class QueryOrderService implements QueryOrderUseCase {
 
     private final OrderJpaRepository orderRepository;
+    private final PriceService priceService;
 
     @Override
     @Transactional
@@ -32,6 +35,14 @@ public class QueryOrderService implements QueryOrderUseCase {
     }
 
     private RichOrder toRichOrder(Order order) {
-        return new RichOrder(order.getId(), order.getStatus(), order.getItems(), order.getRecipient(), order.getCreatedAt());
+        OrderPrice orderPrice = priceService.calculatePrice(order);
+        return new RichOrder(
+                order.getId(),
+                order.getStatus(),
+                order.getItems(),
+                order.getRecipient(),
+                order.getCreatedAt(),
+                orderPrice,
+                orderPrice.finalPrice());
     }
 }

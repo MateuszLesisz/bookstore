@@ -1,5 +1,6 @@
 package com.book_shop.bookstore.order.application;
 
+import com.book_shop.bookstore.order.application.price.OrderPrice;
 import com.book_shop.bookstore.order.domain.OrderItem;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
@@ -18,10 +19,6 @@ public class RichOrder {
     private Set<OrderItem> items;
     private Recipient recipient;
     private LocalDateTime createdAt;
-
-    public BigDecimal totalPrice() {
-        return items.stream()
-                .map(item -> item.getBook().getPrice().multiply(new BigDecimal(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+    private OrderPrice price;
+    private BigDecimal finalPrice;
 }

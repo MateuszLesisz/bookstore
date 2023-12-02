@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -31,6 +32,10 @@ public class Order extends BaseEntity {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Recipient recipient;
 
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Delivery delivery = Delivery.COURIER;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -41,5 +46,15 @@ public class Order extends BaseEntity {
         UpdateStatusResult result = this.status.updateStatus(newStatus);
         this.status = result.getOrderStatus();
         return result;
+    }
+
+    public BigDecimal getItemsPrice() {
+        return items.stream()
+                .map(item -> item.getBook().getPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getDeliveryPrice() {
+        return delivery.getPrice();
     }
 }
