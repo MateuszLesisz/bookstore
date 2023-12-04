@@ -7,6 +7,7 @@ import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.Ord
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
+import com.book_shop.bookstore.order.domain.Delivery;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
 import org.junit.jupiter.api.Test;
@@ -96,7 +97,7 @@ class OrderServiceTest {
     public void userCannotRevokePaidOrder() {
         //given
         Book effectiveJava = givenEffectiveJava(50L);
-        Long orderId = placeOrder(effectiveJava.getId(), 15);
+        Long orderId = placedOrder(effectiveJava.getId(), 15);
         assertEquals(35L, availableCopiesOf(effectiveJava));
 
         // TODO: fix on security module
@@ -118,7 +119,7 @@ class OrderServiceTest {
     public void userCannotRevokeShippedOrder() {
         //given
         Book effectiveJava = givenEffectiveJava(50L);
-        Long orderId = placeOrder(effectiveJava.getId(), 15);
+        Long orderId = placedOrder(effectiveJava.getId(), 15);
         assertEquals(35L, availableCopiesOf(effectiveJava));
         UpdateStatusCommand command = new UpdateStatusCommand(orderId, OrderStatus.PAID, "john@example.org");
         UpdateStatusCommand command2 = new UpdateStatusCommand(orderId, OrderStatus.SHIPPED, "john@example.org");
@@ -228,13 +229,55 @@ class OrderServiceTest {
         assertEquals(OrderStatus.PAID, queryOrderUseCase.findById(orderId).get().getStatus());
     }
 
-    public Long placedOrder(Long bookId, int copies, String recipient) {
-        PlaceOrderCommand command = PlaceOrderCommand
-                .builder()
-                .recipient(recipient(recipient))
-                .orderItem(new OrderItemCommand(bookId, copies))
-                .build();
-        return orderService.placeOrder(command).getRight();
+    @Test
+    public void shippingCostsAreAddedToTotalOrderPrice() {
+        //given
+        Book book = givenBook(50L, "49.99");
+
+        //when
+        Long orderId = placedOrder(book.getId(),1);
+
+        //then
+        assertEquals("59.89", orderOf(orderId).getFinalPrice().toPlainString());
+    }
+
+    @Test
+    public void shippingCostsAreDiscountedOver100zlotys() {
+        //given
+        Book book = givenBook(50L, "49.90");
+
+        //when
+        Long orderId = placedOrder(book.getId(), 3);
+
+        //then
+        RichOrder order = orderOf(orderId);
+        assertEquals("149.70", order.getFinalPrice().toPlainString());
+        assertEquals("149.70", order.getOrderPrice().getItemsPrice().toPlainString());
+    }
+
+    @Test
+    public void cheapestBookIsHalfPricedWhenTotalOver200zlotys() {
+        //given
+        Book book = givenBook(50L, "49.90");
+
+        //when
+        Long orderId = placedOrder(book.getId(), 5);
+
+        //then
+        RichOrder order = orderOf(orderId);
+        assertEquals("224.55", order.getFinalPrice().toPlainString());
+    }
+
+    @Test
+    public void cheapestBookIsFreeWhenTotalOver400zlotys() {
+        //given
+        Book book = givenBook(50L, "49.90");
+
+        //when
+        Long orderId = placedOrder(book.getId(), 10);
+
+        //then
+        assertEquals("449.10", orderOf(orderId).getFinalPrice().toPlainString());
     }
 
     private Book givenJavaConcurrency(long available) {
@@ -253,10 +296,20 @@ class OrderServiceTest {
         return Recipient.builder().email(email).build();
     }
 
-    public Long placeOrder(Long bookId, int copies) {
+    public Long placedOrder(Long bookId, int copies) {
         PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient())
+                .orderItem(new OrderItemCommand(bookId, copies))
+                .delivery(Delivery.COURIER)
+                .build();
+        return orderService.placeOrder(command).getRight();
+    }
+
+    public Long placedOrder(Long bookId, int copies, String recipient) {
+        PlaceOrderCommand command = PlaceOrderCommand
+                .builder()
+                .recipient(recipient(recipient))
                 .orderItem(new OrderItemCommand(bookId, copies))
                 .build();
         return orderService.placeOrder(command).getRight();
@@ -264,5 +317,13 @@ class OrderServiceTest {
 
     private Long availableCopiesOf(Book book) {
         return catalogUseCase.findById(book.getId()).get().getAvailable();
+    }
+
+    private Book givenBook(long available, String price) {
+        return bookRepository.save(new Book("Java concurrency in Practice", 2006, new BigDecimal(price), available));
+    }
+
+    private RichOrder orderOf(Long orderId) {
+        return queryOrderUseCase.findById(orderId).get();
     }
 }

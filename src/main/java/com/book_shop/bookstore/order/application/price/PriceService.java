@@ -2,6 +2,7 @@ package com.book_shop.bookstore.order.application.price;
 
 import com.book_shop.bookstore.order.domain.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,10 +14,11 @@ public class PriceService {
             new TotalPriceDiscountStrategy()
     );
 
+    @Transactional
     public OrderPrice calculatePrice(Order order) {
         return new OrderPrice(
+                order.getItemsPrice(),
                 order.getDeliveryPrice(),
-                order.getDelivery().getPrice(),
                 discounts(order)
         );
     }

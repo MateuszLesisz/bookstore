@@ -19,6 +19,6 @@ public class RichOrder {
     private Set<OrderItem> items;
     private Recipient recipient;
     private LocalDateTime createdAt;
-    private OrderPrice price;
+    private OrderPrice orderPrice;
     private BigDecimal finalPrice;
 }

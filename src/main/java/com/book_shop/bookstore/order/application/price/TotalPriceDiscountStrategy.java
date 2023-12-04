@@ -4,6 +4,7 @@ import com.book_shop.bookstore.order.domain.Order;
 import com.book_shop.bookstore.order.domain.OrderItem;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 
 public class TotalPriceDiscountStrategy implements DiscountStrategy {
@@ -13,7 +14,7 @@ public class TotalPriceDiscountStrategy implements DiscountStrategy {
             return lowestBookPrice(order.getItems());
         } else if (isGreaterOrEqual(order, 200)) {
             BigDecimal lowestPrice = lowestBookPrice(order.getItems());
-            return lowestPrice.divide(BigDecimal.valueOf(2), Rounding);
+            return lowestPrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
         }
         return BigDecimal.ZERO;
     }
