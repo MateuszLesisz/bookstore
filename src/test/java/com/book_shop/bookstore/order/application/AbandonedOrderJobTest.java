@@ -4,6 +4,7 @@ import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.db.BookJpaRepository;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.clock.Clock;
+import com.book_shop.bookstore.order.domain.Delivery;
 import com.book_shop.bookstore.order.domain.OrderStatus;
 import com.book_shop.bookstore.order.domain.Recipient;
 import org.junit.jupiter.api.Test;
@@ -65,6 +66,7 @@ class AbandonedOrderJobTest {
                 .builder()
                 .recipient(recipient())
                 .orderItem(new OrderItemCommand(bookId, copies))
+                .delivery(Delivery.COURIER)
                 .build();
         return manipulateOrderService.placeOrder(command).getRight();
     }
