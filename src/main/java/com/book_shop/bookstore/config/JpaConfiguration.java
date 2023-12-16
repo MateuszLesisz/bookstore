@@ -1,4 +1,4 @@
-package com.book_shop.bookstore;
+package com.book_shop.bookstore.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
