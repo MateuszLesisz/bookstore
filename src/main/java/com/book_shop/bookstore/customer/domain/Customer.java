@@ -1,4 +1,4 @@
-package com.book_shop.bookstore.user.domain;
+package com.book_shop.bookstore.customer.domain;
 
 import com.book_shop.bookstore.jpa.BaseEntity;
 import jakarta.persistence.Entity;
@@ -11,12 +11,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Builder
+@Builder(setterPrefix = "with")
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "customer")
 @EntityListeners(AuditingEntityListener.class)
 public class Customer extends BaseEntity {

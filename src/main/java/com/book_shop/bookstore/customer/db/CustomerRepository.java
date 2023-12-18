@@ -1,6 +1,6 @@
-package com.book_shop.bookstore.user.db;
+package com.book_shop.bookstore.customer.db;
 
-import com.book_shop.bookstore.user.domain.Customer;
+import com.book_shop.bookstore.customer.domain.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

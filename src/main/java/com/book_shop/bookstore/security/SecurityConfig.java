@@ -3,8 +3,10 @@ package com.book_shop.bookstore.security;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,9 +18,10 @@ public class SecurityConfig {
     @Bean
     @SneakyThrows
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
-        http.authorizeHttpRequests(requests -> {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(requests -> {
             requests.requestMatchers("/catalog/**", "/admin/**", "/orders/**", "/uploads/**").authenticated()
-                    .requestMatchers("/authors/**").permitAll();
+                    .requestMatchers("/authors/**", "/register/**").permitAll();
         });
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());

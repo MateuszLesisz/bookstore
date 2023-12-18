@@ -1,7 +1,7 @@
 package com.book_shop.bookstore.security;
 
-import com.book_shop.bookstore.user.db.CustomerRepository;
-import com.book_shop.bookstore.user.domain.Customer;
+import com.book_shop.bookstore.customer.db.CustomerRepository;
+import com.book_shop.bookstore.customer.domain.Customer;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
