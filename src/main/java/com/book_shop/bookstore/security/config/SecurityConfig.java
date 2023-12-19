@@ -1,4 +1,4 @@
-package com.book_shop.bookstore.security;
+package com.book_shop.bookstore.security.config;
 
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
