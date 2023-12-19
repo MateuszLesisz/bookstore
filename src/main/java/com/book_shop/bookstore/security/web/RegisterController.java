@@ -1,4 +1,4 @@
-package com.book_shop.bookstore.customer.web;
+package com.book_shop.bookstore.security.web;
 
 import com.book_shop.bookstore.customer.domain.RegisterCostumerRequest;
 import com.book_shop.bookstore.customer.service.CustomerService;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/register")
-public class LoginController {
+public class RegisterController {
 
     private final CustomerService customerService;
 

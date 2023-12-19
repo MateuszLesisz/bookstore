@@ -1,4 +1,4 @@
-package com.book_shop.bookstore.security;
+package com.book_shop.bookstore.security.service;
 
 import com.book_shop.bookstore.customer.db.CustomerRepository;
 import com.book_shop.bookstore.customer.domain.Customer;
@@ -21,7 +21,6 @@ import java.util.Optional;
 public class BookstoreUserDetails implements UserDetailsService {
 
     private final CustomerRepository customerRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -33,7 +32,7 @@ public class BookstoreUserDetails implements UserDetailsService {
         } else {
             Customer customer = customerOptional.get();
             userName = customer.getEmail();
-            password = passwordEncoder.encode(customer.getPwd());
+            password = customer.getPwd();
             authorities.add(new SimpleGrantedAuthority(customer.getRole()));
         }
         return new User(userName, password, authorities);
