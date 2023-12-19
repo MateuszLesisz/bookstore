@@ -7,6 +7,7 @@ import com.book_shop.bookstore.exception.UserAlreadyExistException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<Object> registerUser(RegisterCostumerRequest request) {
         if (customerRepository.findByEmail(request.getEmail().toLowerCase()).isPresent()) {
@@ -31,7 +33,7 @@ public class CustomerService {
     private Customer createUser(RegisterCostumerRequest request) {
         return Customer.builder()
                 .withEmail(request.getEmail())
-                .withPwd(request.getPassword())
+                .withPwd(passwordEncoder.encode(request.getPassword()))
                 .withRole(request.getRole())
                 .withCreatedAt(LocalDateTime.now())
                 .withUpdatedAt(null)
