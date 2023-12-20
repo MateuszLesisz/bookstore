@@ -9,7 +9,11 @@ import com.book_shop.bookstore.catalog.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.jpa.BaseEntity;
 import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
+import com.book_shop.bookstore.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
 import com.book_shop.bookstore.order.application.port.QueryOrderUseCase;
+import com.book_shop.bookstore.order.domain.Delivery;
 import com.book_shop.bookstore.order.domain.Recipient;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvToBean;
@@ -103,14 +107,15 @@ public class CatalogInitializerService implements CatalogInitializerUseCase {
                 .email("jan@example.org")
                 .build();
 
-        ManipulateOrderUseCase.PlaceOrderCommand command = ManipulateOrderUseCase.PlaceOrderCommand
+        PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .orderItem(new ManipulateOrderUseCase.OrderItemCommand(effectiveJava.getId(), 12))
-                .orderItem(new ManipulateOrderUseCase.OrderItemCommand(puzzlers.getId(), 12))
+                .orderItem(new OrderItemCommand(effectiveJava.getId(), 12))
+                .orderItem(new OrderItemCommand(puzzlers.getId(), 12))
+                .delivery(Delivery.COURIER)
                 .build();
 
-        ManipulateOrderUseCase.PlaceOrderResponse response = placeOrder.placeOrder(command);
+        PlaceOrderResponse response = placeOrder.placeOrder(command);
         String result = response.handle(
                 orderId -> "Created ORDER with id: " + orderId,
                 error -> "Failed to created order: " + error

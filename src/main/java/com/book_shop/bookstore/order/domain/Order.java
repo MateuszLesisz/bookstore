@@ -59,6 +59,6 @@ public class Order extends BaseEntity {
         if (items.isEmpty()) {
             return BigDecimal.ZERO;
         }
-        return delivery.getPrice();
+        return Delivery.COURIER.getPrice();
     }
 }
