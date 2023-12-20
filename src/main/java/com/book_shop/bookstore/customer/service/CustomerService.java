@@ -7,6 +7,8 @@ import com.book_shop.bookstore.exception.UserAlreadyExistException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,11 @@ public class CustomerService {
                 .withCreatedAt(LocalDateTime.now())
                 .withUpdatedAt(null)
                 .build();
+    }
+
+    public Customer getCustomerDetailsAfterLogin(Authentication authentication) {
+        return customerRepository
+                .findByEmail(authentication.getName())
+                .orElseThrow(() -> new BadCredentialsException("User not found"));
     }
 }

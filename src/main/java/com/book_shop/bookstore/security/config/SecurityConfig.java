@@ -20,7 +20,7 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> {
-            requests.requestMatchers("/catalog/**", "/admin/**", "/orders/**", "/uploads/**").authenticated()
+            requests.requestMatchers("/catalog/**", "/admin/**", "/orders/**", "/uploads/**", "/users/**").authenticated()
                     .requestMatchers("/authors/**", "/register/**").permitAll();
         });
         http.formLogin(Customizer.withDefaults());
