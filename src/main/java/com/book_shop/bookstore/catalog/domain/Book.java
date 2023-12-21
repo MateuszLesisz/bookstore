@@ -1,5 +1,6 @@
 package com.book_shop.bookstore.catalog.domain;
 
+import com.book_shop.bookstore.author.domain.Author;
 import com.book_shop.bookstore.jpa.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

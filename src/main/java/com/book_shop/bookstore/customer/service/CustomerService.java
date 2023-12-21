@@ -5,8 +5,8 @@ import com.book_shop.bookstore.customer.domain.Customer;
 import com.book_shop.bookstore.customer.domain.RegisterCostumerRequest;
 import com.book_shop.bookstore.exception.UserAlreadyExistException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,19 +16,18 @@ import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<Object> registerUser(RegisterCostumerRequest request) {
+    public void registerUser(RegisterCostumerRequest request) {
         if (customerRepository.findByEmail(request.getEmail().toLowerCase()).isPresent()) {
             throw new UserAlreadyExistException("User with given email already exist.", HttpStatus.CONFLICT);
         } else {
             customerRepository.save(createUser(request));
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body("User successfully registered.");
+            log.info("User successfully registered with email= {}", request.getEmail());
         }
     }
 

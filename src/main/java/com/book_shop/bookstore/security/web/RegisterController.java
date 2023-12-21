@@ -4,7 +4,6 @@ import com.book_shop.bookstore.customer.domain.RegisterCostumerRequest;
 import com.book_shop.bookstore.customer.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -16,8 +15,8 @@ public class RegisterController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> registerUser(@RequestBody RegisterCostumerRequest request) {
-    return customerService.registerUser(request);
+    public void registerUser(@RequestBody RegisterCostumerRequest request) {
+        customerService.registerUser(request);
     }
 
 }

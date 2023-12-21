@@ -3,7 +3,7 @@ package com.book_shop.bookstore.catalog.application;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.db.AuthorJpaRepository;
 import com.book_shop.bookstore.catalog.db.BookJpaRepository;
-import com.book_shop.bookstore.catalog.domain.Author;
+import com.book_shop.bookstore.author.domain.Author;
 import com.book_shop.bookstore.catalog.domain.Book;
 import com.book_shop.bookstore.uploads.application.port.UploadUseCase;
 import com.book_shop.bookstore.uploads.application.port.UploadUseCase.SaveUploadCommand;
@@ -27,7 +27,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public List<Book> findAll() {
-        return bookRepository.findAllEager();
+        return bookRepository.findAll();
     }
 
     @Override

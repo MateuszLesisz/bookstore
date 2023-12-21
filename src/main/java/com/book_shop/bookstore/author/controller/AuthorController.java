@@ -1,7 +1,8 @@
-package com.book_shop.bookstore.catalog.web;
+package com.book_shop.bookstore.author.controller;
 
-import com.book_shop.bookstore.catalog.application.port.AuthorUseCase;
-import com.book_shop.bookstore.catalog.domain.Author;
+import com.book_shop.bookstore.author.domain.Author;
+
+import com.book_shop.bookstore.author.service.AuthorService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +15,10 @@ import java.util.List;
 @RequestMapping("/authors")
 public class AuthorController {
 
-    private final AuthorUseCase authors;
+    private final AuthorService authorService;
 
     @GetMapping
     public List<Author> findAll() {
-        return authors.findAll();
+        return authorService.findAll();
     }
 }
