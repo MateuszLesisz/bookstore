@@ -29,10 +29,10 @@ public class SecurityConfig {
             config.setMaxAge(3600L);
             return config;
         }));
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/register"))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/catalog/**", "/admin/**", "/orders/**", "/uploads/**", "/users/**").authenticated()
-                        .requestMatchers("/authors/**", "/register/**").permitAll());
+                        .requestMatchers("/authors/**", "/register").permitAll());
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
         return http.build();
