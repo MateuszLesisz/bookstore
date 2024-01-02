@@ -1,14 +1,15 @@
 package com.book_shop.bookstore.catalog.web;
 
+import com.book_shop.bookstore.author.domain.Author;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase.CreateBookCommand;
 import com.book_shop.bookstore.catalog.db.AuthorJpaRepository;
-import com.book_shop.bookstore.catalog.domain.Author;
-import com.book_shop.bookstore.catalog.domain.Book;
+import com.book_shop.bookstore.catalog.domain.RestBook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
@@ -38,7 +39,7 @@ class CatalogControllerIT {
         givenJavaConcurrencyInPractise();
 
         //when
-        List<Book> all = controller.getAll(Optional.empty(), Optional.empty());
+        List<RestBook> all = controller.getAll(mockHttpServletRequest(), Optional.empty(), Optional.empty());
 
         //then
         assertEquals(2, all.size());
@@ -51,7 +52,7 @@ class CatalogControllerIT {
         givenJavaConcurrencyInPractise();
 
         //when
-        List<Book> all = controller.getAll(Optional.empty(), Optional.of("Bloch"));
+        List<RestBook> all = controller.getAll(mockHttpServletRequest(), Optional.empty(), Optional.of("Bloch"));
 
         //then
         assertEquals(1, all.size());
@@ -65,7 +66,7 @@ class CatalogControllerIT {
         givenJavaConcurrencyInPractise();
 
         //when
-        List<Book> all = controller.getAll(Optional.of("Java Concurrency in Practice"), Optional.empty());
+        List<RestBook> all = controller.getAll(mockHttpServletRequest(), Optional.of("Java Concurrency in Practice"), Optional.empty());
 
         //then
         assertEquals(1, all.size());
@@ -92,5 +93,9 @@ class CatalogControllerIT {
                 new BigDecimal("129.90"),
                 50L
         ));
+    }
+
+    private MockHttpServletRequest mockHttpServletRequest() {
+        return new MockHttpServletRequest();
     }
 }

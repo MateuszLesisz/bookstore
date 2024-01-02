@@ -2,10 +2,13 @@ package com.book_shop.bookstore.catalog.web;
 
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.domain.Book;
+import com.book_shop.bookstore.catalog.domain.RestBook;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -33,9 +36,13 @@ class CatalogControllerTest {
         when(catalogUseCase.findAll()).thenReturn(List.of(effectiveJava, concurrency));
 
         //when
-        List<Book> all = catalogController.getAll(Optional.empty(), Optional.empty());
+        List<RestBook> all = catalogController.getAll(getMockHttpServletRequest(),Optional.empty(), Optional.empty());
 
         //then
         assertEquals(2, all.size());
+    }
+
+    private HttpServletRequest getMockHttpServletRequest() {
+        return new MockHttpServletRequest();
     }
 }

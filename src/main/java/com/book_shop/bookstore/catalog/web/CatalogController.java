@@ -2,6 +2,8 @@ package com.book_shop.bookstore.catalog.web;
 
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.domain.Book;
+import com.book_shop.bookstore.catalog.domain.RestBook;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.book_shop.bookstore.catalog.application.port.CatalogUseCase.*;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @RequestMapping("/catalog")
@@ -34,17 +37,21 @@ public class CatalogController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> getAll(
+    public List<RestBook> getAll(
+            HttpServletRequest request,
             @RequestParam Optional<String> title,
             @RequestParam Optional<String> author) {
+        List<Book> books = catalog.findAll();
         if (title.isPresent() && author.isPresent()) {
-            return catalog.findByTitleAndAuthor(title.get(), author.get());
+            books = catalog.findByTitleAndAuthor(title.get(), author.get());
         } else if (title.isPresent()) {
-            return catalog.findByTitle(title.get());
+            books = catalog.findByTitle(title.get());
         } else if (author.isPresent()) {
-            return catalog.findByAuthor(author.get());
+            books = catalog.findByAuthor(author.get());
         }
-        return catalog.findAll();
+        return books.stream()
+                .map(book -> new RestBook(book, request))
+                .collect(toList());
     }
 
     @GetMapping("/{id}")

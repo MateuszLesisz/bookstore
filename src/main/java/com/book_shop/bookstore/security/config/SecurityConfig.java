@@ -43,8 +43,8 @@ public class SecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/admin/**", "/orders/**", "/uploads/**", "/users/**").authenticated()
-                        .requestMatchers("/authors/**", REGISTER_PATH, "/catalog/**").permitAll());
+                        .requestMatchers("/admin/**", "/orders/**", "/users/**").authenticated()
+                        .requestMatchers("/authors/**", REGISTER_PATH, "/catalog/**", "/uploads/**").permitAll());
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
         return http.build();

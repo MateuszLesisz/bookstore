@@ -2,6 +2,7 @@ package com.book_shop.bookstore.catalog.web;
 
 import com.book_shop.bookstore.catalog.application.port.CatalogUseCase;
 import com.book_shop.bookstore.catalog.domain.Book;
+import com.book_shop.bookstore.catalog.domain.RestBook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,13 +36,13 @@ class CatalogControllerApiTest {
         Book effectiveJava = new Book("Effective Java", 2005, new BigDecimal("99.90"), 10L);
         Book concurrency = new Book("Java Concurrency", 2006, new BigDecimal("129.00"), 50L);
         when(catalogUseCase.findAll()).thenReturn(List.of(effectiveJava, concurrency));
-        ParameterizedTypeReference<List<Book>> type = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<List<RestBook>> type = new ParameterizedTypeReference<>() {
         };
 
         //when
         String url = "http://localhost:" + port + "/catalog";
         RequestEntity<Void> request = RequestEntity.get(URI.create(url)).build();
-        ResponseEntity<List<Book>> response = testRestTemplate.exchange(request, type);
+        ResponseEntity<List<RestBook>> response = testRestTemplate.exchange(request, type);
 
         //then
         assertEquals(2, response.getBody().size());
