@@ -1,9 +1,10 @@
 package com.book_shop.bookstore.author.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Value
-public record RestAuthor(String name) {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class RestAuthor {
+    private String name;
 }

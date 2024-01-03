@@ -21,7 +21,7 @@ public class RestBook {
     private String title;
     private Integer year;
     private BigDecimal price;
-    private String coverId;
+    private String coverUrl;
     private Long available;
     private Set<RestAuthor> authors;
 
@@ -30,7 +30,7 @@ public class RestBook {
         this.title = book.getTitle();
         this.year = book.getYear();
         this.price = book.getPrice();
-        this.coverId = getCoverUrl(book, request);
+        this.coverUrl = getCoverUrl(book, request);
         this.available = book.getAvailable();
         this.authors = toRestAuthor(book.getAuthors());
 
